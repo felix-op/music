@@ -57,8 +57,8 @@ export function NavbarButton({ pathname, route }: Props) {
                     size={30}
                     color={
                         activo
-                            ? "#fff"
-                            : "#888"
+                            ? "#ffffff"
+                            : "#8b86a4" // Cosmic lavender inactive color
                     }
                 />
             </Animated.View>

@@ -3,3 +3,5 @@ export { NavbarButton } from "./Navbar/NavbarButton";
 export { NavbarContainer } from "./Navbar/NavbarContainer";
 export { Typography } from "./Typography/Typography";
 
+export { Header } from "./Header/Header";
+export { ChipButton } from "./ChipButton/ChipButton";

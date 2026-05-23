@@ -1,21 +1,13 @@
 
 import { NavbarButton, NavbarContainer } from "@components/index";
 import { StyleSheet, Text, View } from "react-native";
+import { Header } from "@components/index";
 
 export default function Page() {
 
     return (
         <View>
-            <View style={estilos.header}>
-                <Text style={{ fontSize: 28, fontWeight: "bold", color: "#eee"}}>Playlist</Text>
-                <View style={estilos.navbar}>
-                    <NavbarContainer>
-                        <NavbarButton pathname="playlist" route={{ href: "playlist", id: "", label: "", icon: "play" }} />
-                        <NavbarButton pathname="explore" route={{ href: "/", id: "", label: "", icon: "list" }} />
-                    </NavbarContainer>
-                </View>
-            </View>
-
+            <Header title="Listas de Reproducción"/>
         </View>
     );
 }
