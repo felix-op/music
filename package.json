@@ -7,7 +7,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "component": "node scripts/create-component.js"
+    "component": "node scripts/create-component.js",
+    "service": "node scripts/create-service.js"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
