@@ -1,32 +1,9 @@
 import { Stack } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { FontOption, useAppFont } from "../../src/context/FontContext";
+import { FontOption, useAppFont } from "@services";
 
 export default function SystemSettingsPage() {
-    const { selectedFont, changeFont, fontFamilyRegular, fontFamilyBold } = useAppFont();
-
-    const fontOptions: { key: FontOption; label: string; sample: string }[] = [
-        {
-            key: "Caveat",
-            label: "Caveat",
-            sample: "Música & Sentimiento",
-        },
-        {
-            key: "Poppins",
-            label: "Poppins",
-            sample: "Modern Style",
-        },
-        {
-            key: "SourceCodePro",
-            label: "Source Code Pro",
-            sample: "const music = true;",
-        },
-        {
-            key: "Finlandica",
-            label: "Finlandica",
-            sample: "Nordic Design",
-        },
-    ];
+    const { selectedFont, changeFont, fontFamilyRegular, fontFamilyBold, fontOptions } = useAppFont();
 
     return (
         <View style={estilos.contenedor}>
@@ -47,12 +24,7 @@ export default function SystemSettingsPage() {
             <View style={estilos.tarjetero}>
                 {fontOptions.map((item) => {
                     const esActivo = selectedFont === item.key;
-                    // Mapeo dinámico para el texto de muestra en la tarjeta
-                    let previewFont = "Poppins-Regular";
-                    if (item.key === "Caveat") previewFont = "Caveat-Bold";
-                    else if (item.key === "Poppins") previewFont = "Poppins-Bold";
-                    else if (item.key === "SourceCodePro") previewFont = "SourceCodePro-Bold";
-                    else if (item.key === "Finlandica") previewFont = "Finlandica-Bold";
+                    const previewFont = item.previewFont;
 
                     return (
                         <Pressable

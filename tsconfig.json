@@ -4,8 +4,10 @@
     "strict": true,
     "paths": {
       "@styles/*": ["./src/styles/*"],
+      "@components": ["./src/components"],
       "@components/*": ["./src/components/*"],
-      "@services/*": ["./src/services/*"],
+      "@services": ["./src/services"],
+      "@services/*": ["./src/services/*"]
     }
   },
   "include": [

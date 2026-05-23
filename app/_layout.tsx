@@ -1,15 +1,9 @@
-import { Navbar } from "@components/index";
+import { Navbar } from "@components";
 import { Stack } from "expo-router";
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { FontProvider, useAppFont } from "../src/context/FontContext";
+import { FontProvider, useAppFont } from "@services";
 import { StatusBar } from "expo-status-bar";
-
-// Prevent the splash screen from auto-hiding before asset loading is complete
-SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   return (
@@ -22,30 +16,6 @@ export default function RootLayout() {
 function InnerLayout() {
   const { top, bottom, left, right } = useSafeAreaInsets();
   const { fontFamilyBold } = useAppFont();
-
-  const [loaded, error] = useFonts({
-    "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
-    "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
-    "SourceCodePro-Regular": require("../assets/fonts/SourceCodePro-Regular.ttf"),
-    "SourceCodePro-Bold": require("../assets/fonts/SourceCodePro-Bold.ttf"),
-    "Caveat-Regular": require("../assets/fonts/Caveat.ttf"),
-    "Caveat-Bold": require("../assets/fonts/Caveat.ttf"),
-    "Finlandica-Regular": require("../assets/fonts/FinlandicaText.ttf"),
-    "Finlandica-Bold": require("../assets/fonts/FinlandicaText-Italic.ttf"),
-  });
-
-  useEffect(() => {
-    if (error) {
-      console.error("Font loading error:", error);
-    }
-    if (loaded || error) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded, error]);
-
-  if (!loaded && !error) {
-    return null;
-  }
 
   return (
     <View
