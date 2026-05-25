@@ -10,7 +10,6 @@ type Props = {
     route: AppRoute
 }
 
-
 export function NavbarButton({ pathname, route }: Props) {
     const activo =
         pathname === route.href ||
@@ -48,7 +47,7 @@ export function NavbarButton({ pathname, route }: Props) {
             key={route.id}
             style={estilos.boton}
             onPress={() =>
-                router.replace(route.href)
+                router.replace(route.href as any)
             }
         >
             <Animated.View style={{ transform: [{ translateY }] }}>

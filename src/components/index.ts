@@ -5,3 +5,7 @@ export { Typography } from "./Typography/Typography";
 
 export { Header } from "./Header/Header";
 export { ChipButton } from "./ChipButton/ChipButton";
+export { Album } from "./Album/Album";
+export { SimpleLoading } from "./SimpleLoading/SimpleLoading";
+export { AlbumPlaceholder } from "./AlbumPlaceholder/AlbumPlaceholder";
+export { GenrePlaceholder } from "./GenrePlaceholder/GenrePlaceholder";

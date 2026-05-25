@@ -22,8 +22,9 @@ function InnerLayout() {
       style={{
         flex: 1,
         backgroundColor: "#09070F", // Deep cosmic antigravity black
+        paddingTop: top,
       }}>
-      <StatusBar style="light" />
+      <StatusBar style="dark" />
       <Stack
         screenOptions={{
           headerShown: false,
@@ -38,17 +39,15 @@ function InnerLayout() {
           },
           contentStyle: {
             backgroundColor: "#09070F", // Seamless blend with header!
-            paddingTop: top + 10,
-            paddingLeft: left + 20,
-            paddingRight: right + 20,
-            paddingBottom: bottom,
+            paddingLeft: left + 10,
+            paddingRight: right + 10,
           }
         }}
       />
       <View style={{
         position: "absolute",
-        left: 20,
-        right: 20,
+        left: 10,
+        right: 10,
         bottom: bottom + 20,
       }}>
         <Navbar />
