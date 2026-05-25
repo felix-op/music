@@ -3,11 +3,14 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
+      "@styles": ["./src/styles"],
       "@styles/*": ["./src/styles/*"],
       "@components": ["./src/components"],
       "@components/*": ["./src/components/*"],
       "@services": ["./src/services"],
-      "@services/*": ["./src/services/*"]
+      "@services/*": ["./src/services/*"],
+      "@models": ["./src/models"],
+      "@models/*": ["./src/models/*"]
     }
   },
   "include": [
