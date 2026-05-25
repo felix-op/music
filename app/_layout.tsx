@@ -24,7 +24,7 @@ function InnerLayout() {
         backgroundColor: "#09070F", // Deep cosmic antigravity black
         paddingTop: top,
       }}>
-      <StatusBar style="dark" />
+      <StatusBar style="light" />
       <Stack
         screenOptions={{
           headerShown: false,
