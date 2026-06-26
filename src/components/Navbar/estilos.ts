@@ -3,10 +3,8 @@ import { StyleSheet } from "react-native";
 export const estilos = StyleSheet.create({
     contenedor: {
         height: 60,
-        backgroundColor: "#151124", // Cosmic dark purple container
         borderRadius: 16,
         borderWidth: 1,
-        borderColor: "#221b3a", // Subtle cosmic border
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-around",
@@ -23,11 +21,22 @@ export const estilos = StyleSheet.create({
 
     indicador: {
         position: "absolute",
-        bottom: 12,
-        width: 16,
-        height: 3,
-        borderRadius: 2,
-        backgroundColor: "#00F2FE", // Glowing cosmic cyan active line
+        bottom: -6,
+        width: 40,
+        height: 6,
+        borderBottomEndRadius: 10,
+        borderBottomStartRadius: 10,
+        // Android
+        elevation: 8,
+
+        // iOS
+        shadowColor: "#00F2FE",
+        shadowOpacity: 0.9,
+        shadowRadius: 18,
+        shadowOffset: {
+            width: 0,
+            height: 0,
+        },
     },
 
     texto: {

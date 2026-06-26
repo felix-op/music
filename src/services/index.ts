@@ -1,14 +1,17 @@
+export { FontContext, FontOption, useAppFont } from "./contexts/FontContext";
+export { FontProvider } from "./providers/FontProvider";
 export {
     AppRoute,
     IconName,
     PLAYLIST_NAVBAR_ROUTES, playlistRoute, ROUTES, routesBuilder
 } from "./rutas";
-export { FontProvider } from "./providers/FontProvider";
-export { FontContext, useAppFont, FontOption } from "./contexts/FontContext";
 
-export { MusicsApi } from "./apis/Musics";
 export { AlbumsApi } from "./apis/Albums";
 export { ArtistsApi } from "./apis/Artists";
 export { GenresApi } from "./apis/Genres";
+export { MusicsApi } from "./apis/Musics";
 
-export { GenreWithAlbums, GenreWithMusics, GenreWithArtists } from "./apis/mockData";
+export { GenreWithAlbums, GenreWithArtists, GenreWithMusics } from "./apis/mockData";
+
+export { appThemes, ThemeContext, ThemeContextType, ThemeKey, useAppTheme } from "./contexts/ThemeContext";
+export { ThemeProvider } from "./providers/ThemeProvider";

@@ -1,5 +1,3 @@
-import { View } from "react-native";
-import { styles } from "./estilos";
 import { Stack } from "expo-router";
 
 type TProps = {

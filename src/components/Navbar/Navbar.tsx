@@ -1,64 +1,54 @@
 import { usePathname } from "expo-router";
 
-import { Ionicons } from "@expo/vector-icons";
-import { ROUTES } from "@services/index";
-import { useEffect } from "react";
-import { Pressable, View } from "react-native";
+import { ROUTES, useAppTheme } from "@services/index";
+import { useRef } from "react";
+import { Animated, View } from "react-native";
 import usePlayList from "../../hooks/usePlayList";
 import { NavbarButton } from "./NavbarButton";
 import { NavbarContainer } from "./NavbarContainer";
 
-
 export function Navbar() {
+    const { theme } = useAppTheme();
     const pathname = usePathname();
-    const { isPlayListMode, botones } = usePlayList();
     const rutasNavbar = ROUTES.filter(
         (route) => route.navbar
     );
+    const index = rutasNavbar.findIndex((route) => (
+        pathname === route.href || pathname.startsWith(route.href + "/")
+    ));
+    const animValue = useRef(new Animated.Value(1)).current;
+    const { isPlayListMode, botones } = usePlayList();
 
-
-
-    // if (isPlayListMode) {
-    //     return (
-    //         <NavbarContainer>
-    //             {botones.map((boton) => (
-    //                 <Pressable onPress={boton.onPress}>
-    //                     <Ionicons
-    //                         name={boton.icon!}
-    //                         size={30}
-    //                         color={"#fff"}
-    //                     />
-    //                 </Pressable>
-    //             ))}
-    //         </NavbarContainer>
-    //     )
-    // }
-
-    // return (
-    //     <NavbarContainer>
-    //         {rutasNavbar.map((route) => <NavbarButton pathname={pathname} route={route} />)}
-    //     </NavbarContainer>
-    // );
+    const scaleX = animValue.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, 1], // Grows the indicator from center (0 to full width)
+    });
+    const opacity = animValue.interpolate({
+        inputRange: [0, 1],
+        outputRange: [0, 1], // Fades the indicator in
+    });
 
     return (
-        <NavbarContainer>
-            {/* MAIN NAVBAR */}
-            <View
-                style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    height: "100%",
-                    width: "100%",
-                }}
-            >
-                {rutasNavbar.map((route) => (
-                    <NavbarButton
-                        key={route.id}
-                        pathname={pathname}
-                        route={route}
-                    />
-                ))}
-            </View>
-        </NavbarContainer>
+        <View>
+            <NavbarContainer>
+                {/* MAIN NAVBAR */}
+                <View
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        height: "100%",
+                        width: "100%",
+                    }}
+                >
+                    {rutasNavbar.map((route) => (
+                        <NavbarButton
+                            key={route.id}
+                            pathname={pathname}
+                            route={route}
+                        />
+                    ))}
+                </View>
+            </NavbarContainer>
+        </View>
     );
 }
