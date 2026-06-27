@@ -1,3 +1,4 @@
+import { useAppTheme } from "@services";
 import React, { useEffect, useRef } from "react";
 import { Animated, FlatList, View } from "react-native";
 import { styles } from "./estilos";
@@ -9,6 +10,7 @@ type TProps = {
 
 export function GenrePlaceholder({ renderItem, itemCount = 4 }: TProps) {
     const pulseAnim = useRef(new Animated.Value(0.4)).current;
+    const { theme } = useAppTheme();
 
     useEffect(() => {
         const pulse = Animated.loop(
@@ -35,7 +37,15 @@ export function GenrePlaceholder({ renderItem, itemCount = 4 }: TProps) {
         <View style={styles.genreSection}>
             {/* Genre Header Placeholder */}
             <View style={styles.genreHeader}>
-                <Animated.View style={[styles.genreTitlePlaceholder, { opacity: pulseAnim }]} />
+                <Animated.View
+                    style={[
+                        styles.genreTitlePlaceholder,
+                        {
+                            backgroundColor: theme.divider,
+                            opacity: pulseAnim
+                        }
+                    ]}
+                />
             </View>
 
             {/* Horizontal Scroll with Custom Child Placeholders */}

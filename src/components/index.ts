@@ -3,9 +3,11 @@ export { NavbarButton } from "./Navbar/NavbarButton";
 export { NavbarContainer } from "./Navbar/NavbarContainer";
 export { Typography } from "./Typography/Typography";
 
-export { Header } from "./Header/Header";
-export { ChipButton } from "./ChipButton/ChipButton";
 export { Album } from "./Album/Album";
-export { SimpleLoading } from "./SimpleLoading/SimpleLoading";
 export { AlbumPlaceholder } from "./AlbumPlaceholder/AlbumPlaceholder";
+export { AnimatedTabBar } from "./AnimatedTabBar/AnimatedTabBar";
+export { ChipButton } from "./ChipButton/ChipButton";
 export { GenrePlaceholder } from "./GenrePlaceholder/GenrePlaceholder";
+export { Header } from "./Header/Header";
+export { SimpleLoading } from "./SimpleLoading/SimpleLoading";
+

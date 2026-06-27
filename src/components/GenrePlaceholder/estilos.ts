@@ -11,7 +11,6 @@ export const styles = StyleSheet.create({
     genreTitlePlaceholder: {
         height: 18,
         width: 120,
-        backgroundColor: "#221b3a",
         borderRadius: 9,
     },
     horizontalListContainer: {

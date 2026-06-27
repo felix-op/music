@@ -6,3 +6,7 @@ export {
     TypeBackground,
     TypeText
 } from "./theme";
+
+export {
+    TabItem
+} from "./tabItem";
