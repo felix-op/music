@@ -1,9 +1,9 @@
-import { Ionicons } from "@expo/vector-icons";
 import { Album, AlbumPlaceholder, GenrePlaceholder } from "@components";
+import { Ionicons } from "@expo/vector-icons";
 import { ThemePalette } from "@models/theme";
-import { useAppFont, useAppTheme, GenresApi, GenreWithAlbums } from "@services";
+import { GenresApi, GenreWithAlbums, useAppFont, useAppTheme } from "@services";
 import { router } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
 type SeeMoreCardProps = {

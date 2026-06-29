@@ -22,15 +22,16 @@ export default function ExplorePage() {
         <View style={styles.container}>
             <Header title="Descubrir, explorar" hideBack />
 
-            <AnimatedTabBar
-                tabs={EXPLORE_TABS} 
-                activeTab={activeTab} 
-                onTabChange={(id) => setActiveTab(id as TabType)} 
-            />
-
+            <View style={styles.tabContainer}>
+                <AnimatedTabBar
+                    tabs={EXPLORE_TABS}
+                    activeTab={activeTab}
+                    onTabChange={(id) => setActiveTab(id as TabType)}
+                />
+            </View>
             <AnimatedTabContent
-                tabs={EXPLORE_TABS} 
-                activeTabKey={activeTab} 
+                tabs={EXPLORE_TABS}
+                activeTabKey={activeTab}
             />
         </View>
     );
@@ -44,4 +45,7 @@ const styles = StyleSheet.create({
     screenContainer: {
         flex: 1,
     },
+    tabContainer: {
+        paddingBottom: 10,
+    }
 });

@@ -25,7 +25,6 @@ function InnerLayout() {
       style={{
         flex: 1,
         backgroundColor: theme.background.default, // Deep cosmic antigravity black
-        paddingTop: top,
       }}>
       <StatusBar style="light" />
       <Stack
