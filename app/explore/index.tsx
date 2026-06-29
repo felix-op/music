@@ -20,7 +20,7 @@ export default function ExplorePage() {
 
     return (
         <View style={styles.container}>
-            <Header title="Descubrir, explorar" />
+            <Header title="Descubrir, explorar" hideBack />
 
             <AnimatedTabBar
                 tabs={EXPLORE_TABS} 

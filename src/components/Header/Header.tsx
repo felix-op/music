@@ -1,15 +1,18 @@
 import { Stack } from "expo-router";
 
 type TProps = {
-    title: string
+    title: string;
+    hideBack?: boolean;
 };
 
-export function Header(props: TProps) {
+export function Header({ title, hideBack = false }: TProps) {
     return (
         <Stack.Screen
             options={{
                 headerShown: true,
-                title: props.title,
+                title,
+                headerBackVisible: !hideBack,
+                ...(hideBack && { headerLeft: () => null }),
             }}
         />
     );

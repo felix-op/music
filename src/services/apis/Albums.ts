@@ -6,17 +6,18 @@ const delay = <T>(value: T): Promise<T> => {
 };
 
 export const AlbumsApi = {
-    /**
-     * Fetch a single album by ID
-     */
     getById: (id: number): Promise<Album | undefined> => {
         return delay(MOCK_ALBUMS.find((album) => album.id === id));
     },
 
-    /**
-     * Fetch all albums
-     */
     getAll: (): Promise<Album[]> => {
         return delay(MOCK_ALBUMS);
+    },
+
+    getByGenreId: (genreId: number): Promise<Album[]> => {
+        const albums = MOCK_ALBUMS.filter((album) =>
+            album.musics.some((music) => music.genres.some((g) => g.id === genreId))
+        );
+        return delay(albums);
     },
 };
