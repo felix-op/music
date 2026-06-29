@@ -9,11 +9,12 @@ type TProps = {
     genreId?: number;
     albumId?: number;
     artistId?: number;
+    showSearch?: boolean;
 };
 
 const PLACEHOLDER_COUNT = 5;
 
-export default function MusicScreen({ genreId, albumId, artistId }: TProps) {
+export default function MusicScreen({ genreId, albumId, artistId, showSearch = true }: TProps) {
     const { theme } = useAppTheme();
     const { fontFamilyRegular } = useAppFont();
     const [musics, setMusics] = useState<Music[]>([]);
@@ -55,7 +56,7 @@ export default function MusicScreen({ genreId, albumId, artistId }: TProps) {
     if (loading) {
         return (
             <View style={styles.container}>
-                <SearchInput value="" onChangeText={() => {}} placeholder="Buscar música..." />
+                {showSearch && <SearchInput value="" onChangeText={() => {}} placeholder="Buscar música..." />}
                 <FlatList
                     data={Array.from({ length: PLACEHOLDER_COUNT }, (_, i) => i)}
                     keyExtractor={(i) => i.toString()}
@@ -68,11 +69,13 @@ export default function MusicScreen({ genreId, albumId, artistId }: TProps) {
 
     return (
         <View style={styles.container}>
-            <SearchInput
-                value={search}
-                onChangeText={setSearch}
-                placeholder="Buscar música..."
-            />
+            {showSearch && (
+                <SearchInput
+                    value={search}
+                    onChangeText={setSearch}
+                    placeholder="Buscar música..."
+                />
+            )}
             <FlatList
                 data={filtered}
                 keyExtractor={(item) => item.id.toString()}
