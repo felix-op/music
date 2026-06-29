@@ -6,6 +6,7 @@ export interface Album {
     name: string;
     artist: Artist;
     musics: Music[];
+    image?: string;
     coverColor?: string;
     year?: string;
 }

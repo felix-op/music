@@ -28,7 +28,7 @@ export default function ExplorePage() {
                 onTabChange={(id) => setActiveTab(id as TabType)} 
             />
 
-            <AnimatedTabContent 
+            <AnimatedTabContent
                 tabs={EXPLORE_TABS} 
                 activeTabKey={activeTab} 
             />

@@ -14,3 +14,4 @@ export { MusicPlaceholder } from "./MusicPlaceholder/MusicPlaceholder";
 export { SimpleLoading } from "./SimpleLoading/SimpleLoading";
 export { SearchInput } from "./SearchInput/SearchInput";
 
+export { MenuModal } from "./MenuModal/MenuModal";
