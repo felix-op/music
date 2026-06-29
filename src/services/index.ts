@@ -9,7 +9,7 @@ export {
 export { AlbumsApi } from "./apis/Albums";
 export { ArtistsApi } from "./apis/Artists";
 export { GenresApi } from "./apis/Genres";
-export { MusicsApi } from "./apis/Musics";
+export { MusicFilters, MusicsApi } from "./apis/Musics";
 
 export { GenreWithAlbums, GenreWithArtists, GenreWithMusics } from "./apis/mockData";
 

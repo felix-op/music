@@ -9,5 +9,8 @@ export { AnimatedTabBar } from "./AnimatedTabBar/AnimatedTabBar";
 export { ChipButton } from "./ChipButton/ChipButton";
 export { GenrePlaceholder } from "./GenrePlaceholder/GenrePlaceholder";
 export { Header } from "./Header/Header";
+export { MusicListItem } from "./MusicListItem/MusicListItem";
+export { MusicPlaceholder } from "./MusicPlaceholder/MusicPlaceholder";
 export { SimpleLoading } from "./SimpleLoading/SimpleLoading";
+export { SearchInput } from "./SearchInput/SearchInput";
 
