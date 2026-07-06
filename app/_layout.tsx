@@ -1,15 +1,20 @@
 import { Navbar } from "@components";
 import { FontProvider, ThemeProvider, useAppFont, useAppTheme } from "@services";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+const client = new QueryClient();
+
 export default function RootLayout() {
   return (
     <ThemeProvider>
       <FontProvider>
-        <InnerLayout />
+        <QueryClientProvider client={client}>
+          <InnerLayout />
+        </QueryClientProvider>
       </FontProvider>
     </ThemeProvider>
   );
