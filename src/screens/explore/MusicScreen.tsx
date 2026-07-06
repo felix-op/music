@@ -3,7 +3,7 @@ import { MusicDezzerModel } from "@models/musicDezzer";
 import { useAppFont, useAppTheme } from "@services";
 import { router } from "expo-router";
 import { useMemo, useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import { useGetMusics } from "../../hooks/useGetMusics";
 import { useGetSearchMusics } from "../../hooks/useGetSearchMusics";
 
@@ -22,11 +22,18 @@ export function MusicScreen({ albumId, showSearch = true }: TProps) {
 
     const isSearching = search.trim().length > 0;
 
-    const { data: browseData, isLoading: isBrowseLoading } = useGetMusics({ enabled: !isSearching });
-    const { data: searchData, isLoading: isSearchLoading } = useGetSearchMusics(search, { enabled: isSearching });
+    const browse = useGetMusics({ enabled: !isSearching });
+    const searchQuery = useGetSearchMusics(search, { enabled: isSearching });
 
-    const musics = isSearching ? searchData ?? [] : browseData ?? [];
-    const loading = isSearching ? isSearchLoading : isBrowseLoading;
+    const active = isSearching ? searchQuery : browse;
+    const musics = active.data ?? [];
+    const loading = active.isLoading;
+
+    const handleEndReached = () => {
+        if (active.hasNextPage && !active.isFetchingNextPage) {
+            active.fetchNextPage();
+        }
+    };
 
     const filtered = useMemo(() => {
         if (!albumId) return musics;
@@ -48,6 +55,7 @@ export function MusicScreen({ albumId, showSearch = true }: TProps) {
                     data={Array.from({ length: PLACEHOLDER_COUNT }, (_, i) => i)}
                     keyExtractor={(i) => i.toString()}
                     showsVerticalScrollIndicator={false}
+                    contentContainerStyle={styles.listContent}
                     renderItem={() => <MusicPlaceholder />}
                 />
             </View>
@@ -67,10 +75,18 @@ export function MusicScreen({ albumId, showSearch = true }: TProps) {
                 data={filtered}
                 keyExtractor={(item) => item.id.toString()}
                 showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.listContent}
+                onEndReached={handleEndReached}
+                onEndReachedThreshold={0.5}
                 ListEmptyComponent={
                     <Text style={[styles.empty, { fontFamily: fontFamilyRegular, color: theme.text.secondary }]}>
                         Sin resultados para "{search}"
                     </Text>
+                }
+                ListFooterComponent={
+                    active.isFetchingNextPage ? (
+                        <ActivityIndicator style={styles.footerLoading} color={theme.primary.main} />
+                    ) : null
                 }
                 renderItem={({ item }) => (
                     <MusicListItem
@@ -93,9 +109,15 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    listContent: {
+        paddingBottom: 140,
+    },
     empty: {
         textAlign: "center",
         marginTop: 40,
         fontSize: 14,
+    },
+    footerLoading: {
+        marginVertical: 16,
     },
 });
