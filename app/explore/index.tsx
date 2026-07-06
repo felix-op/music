@@ -5,7 +5,7 @@ import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import AlbumsScreen from "../../src/screens/explore/AlbumsScreen";
 import ArtistsScreen from "../../src/screens/explore/ArtistsScreen";
-import MusicScreen from "../../src/screens/explore/MusicScreen";
+import { MusicScreen } from "../../src/screens/explore/MusicScreen";
 
 type TabType = "albums" | "artists" | "musics";
 

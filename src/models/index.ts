@@ -10,3 +10,9 @@ export {
 export {
     TabItem
 } from "./tabItem";
+
+export {
+    MusicDezzerAlbum,
+    MusicDezzerArtist,
+    MusicDezzerModel
+} from "./musicDezzer";

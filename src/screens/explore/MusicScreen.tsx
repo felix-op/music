@@ -1,62 +1,49 @@
 import { MusicListItem, MusicPlaceholder, SearchInput } from "@components";
-import { Music } from "@models/music";
-import { MusicFilters, MusicsApi, useAppFont, useAppTheme } from "@services";
+import { MusicDezzerModel } from "@models/musicDezzer";
+import { useAppFont, useAppTheme } from "@services";
 import { router } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
+import { useGetMusics } from "../../hooks/useGetMusics";
+import { useGetSearchMusics } from "../../hooks/useGetSearchMusics";
 
 type TProps = {
-    genreId?: number;
     albumId?: number;
-    artistId?: number;
     showSearch?: boolean;
 };
 
 const PLACEHOLDER_COUNT = 5;
 
-export default function MusicScreen({ genreId, albumId, artistId, showSearch = true }: TProps) {
+export function MusicScreen({ albumId, showSearch = true }: TProps) {
     const { theme } = useAppTheme();
     const { fontFamilyRegular } = useAppFont();
-    const [musics, setMusics] = useState<Music[]>([]);
-    const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
     const [selectedId, setSelectedId] = useState<number | null>(null);
 
-    useEffect(() => {
-        const filters: MusicFilters = {};
-        if (genreId)  filters.genreId = genreId;
-        if (albumId)  filters.albumId = albumId;
-        if (artistId) filters.artistId = artistId;
+    const isSearching = search.trim().length > 0;
 
-        MusicsApi.getFiltered(Object.keys(filters).length ? filters : undefined)
-            .then((data) => {
-                setMusics(data);
-                setLoading(false);
-            })
-            .catch(() => setLoading(false));
-    }, [genreId, albumId, artistId]);
+    const { data: browseData, isLoading: isBrowseLoading } = useGetMusics({ enabled: !isSearching });
+    const { data: searchData, isLoading: isSearchLoading } = useGetSearchMusics(search, { enabled: isSearching });
+
+    const musics = isSearching ? searchData ?? [] : browseData ?? [];
+    const loading = isSearching ? isSearchLoading : isBrowseLoading;
 
     const filtered = useMemo(() => {
-        if (!search.trim()) return musics;
-        const q = search.toLowerCase();
-        return musics.filter(
-            (m) =>
-                m.name.toLowerCase().includes(q) ||
-                m.artist.name.toLowerCase().includes(q)
-        );
-    }, [musics, search]);
+        if (!albumId) return musics;
+        return musics.filter((m) => m.album.id === albumId);
+    }, [musics, albumId]);
 
-    const handleMusicPress = (music: Music) => {
+    const handleMusicPress = (music: MusicDezzerModel) => {
         router.push({
             pathname: "/explore/music/[id]",
-            params: { id: music.id, musicName: music.name },
+            params: { id: music.id, musicName: music.title },
         });
     };
 
     if (loading) {
         return (
             <View style={styles.container}>
-                {showSearch && <SearchInput value="" onChangeText={() => {}} placeholder="Buscar música..." />}
+                {showSearch && <SearchInput value={search} onChangeText={setSearch} placeholder="Buscar música..." />}
                 <FlatList
                     data={Array.from({ length: PLACEHOLDER_COUNT }, (_, i) => i)}
                     keyExtractor={(i) => i.toString()}

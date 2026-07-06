@@ -1,11 +1,11 @@
 import { MenuModal } from "@components";
 import { MenuOption } from "@components/MenuModal/MenuModal";
 import { Ionicons } from "@expo/vector-icons";
-import { Music } from "@models/music";
-import { MusicsApi, useAppFont, useAppTheme } from "@services";
+import { useAppFont, useAppTheme } from "@services";
 import { router, Stack, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ActivityIndicator, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { useGetMusicById } from "../../../src/hooks/useGetMusicById";
 
 type Params = {
     id: string;
@@ -24,27 +24,12 @@ export default function MusicDetailPage() {
     const { theme } = useAppTheme();
     const { fontFamilyRegular, fontFamilyBold } = useAppFont(); // Asumiendo que tienes fontFamilyBold
 
-    const [music, setMusic] = useState<Music | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const { data: music, isLoading } = useGetMusicById(Number(id));
     const [isOptionsModalVisible, setOptionsModalVisible] = useState(false);
-
-    useEffect(() => {
-        const fetchMusic = async () => {
-            try {
-                const data = await MusicsApi.getById(Number(id));
-                if (data) setMusic(data);
-            } catch (error) {
-                console.error("Error fetching music:", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchMusic();
-    }, [id]);
 
     const handlePlay = () => {
         // Lógica de reproducción
-        console.log("Reproduciendo:", music?.name);
+        console.log("Reproduciendo:", music?.title);
     };
 
     const modalOptions: MenuOption[] = [
@@ -102,8 +87,8 @@ export default function MusicDetailPage() {
                 <View style={styles.content}>
                     {/* Imagen del Album */}
                     <View style={styles.imageContainer}>
-                        {music.album?.image ? (
-                            <Image source={{ uri: music.album?.image }} style={styles.coverImage} />
+                        {music.album?.cover_xl ? (
+                            <Image source={{ uri: music.album?.cover_xl }} style={styles.coverImage} />
                         ) : (
                             <View style={[styles.coverPlaceholder, { backgroundColor: theme.background.paper }]}>
                                 <Ionicons name="musical-notes" size={80} color={theme.text.disabled} />
@@ -114,13 +99,13 @@ export default function MusicDetailPage() {
                     {/* Metadatos Principales */}
                     <View style={styles.metadataContainer}>
                         <Text style={[styles.title, { color: theme.text.primary, fontFamily: fontFamilyBold }]}>
-                            {music.name}
+                            {music.title}
                         </Text>
                         <Text style={[styles.subtitle, { color: theme.text.secondary, fontFamily: fontFamilyRegular }]}>
-                            {music.artist?.name} • {music.album?.name}
+                            {music.artist?.name} • {music.album?.title}
                         </Text>
                         <Text style={[styles.tertiaryText, { color: theme.text.disabled, fontFamily: fontFamilyRegular }]}>
-                            {music.genres?.map(g => g.name).join(", ")} • {music.duration}
+                            {formatDuration(music.duration)}
                         </Text>
                     </View>
 

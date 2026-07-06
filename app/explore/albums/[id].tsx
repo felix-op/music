@@ -4,7 +4,7 @@ import { AlbumsApi, useAppFont, useAppTheme } from "@services";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import MusicScreen from "../../../src/screens/explore/MusicScreen";
+import { MusicScreen } from "../../../src/screens/explore/MusicScreen";
 
 type Params = {
     id: string;

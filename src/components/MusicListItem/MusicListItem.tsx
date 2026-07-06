@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Music } from "@models/music";
+import { MusicDezzerModel } from "@models/musicDezzer";
 import { useAppFont, useAppTheme } from "@services";
 import { useRef, useState } from "react";
 import {
@@ -13,10 +13,16 @@ import {
 import { ARROW_WIDTH, styles } from "./estilos";
 
 type TProps = {
-    music: Music;
+    music: MusicDezzerModel;
     selected: boolean;
     onPress: () => void;
     onSelect: () => void;
+};
+
+const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
 };
 
 export function MusicListItem({ music, selected, onPress, onSelect }: TProps) {
@@ -28,7 +34,7 @@ export function MusicListItem({ music, selected, onPress, onSelect }: TProps) {
     const translateX = useRef(new Animated.Value(0)).current;
     const isOpen = useRef(false);
 
-    const iconColor = music.album.coverColor ?? theme.primary.main;
+    const iconColor = theme.primary.main;
 
     const snapTo = (toValue: number, onDone?: () => void) => {
         isOpen.current = toValue !== 0;
@@ -125,7 +131,7 @@ style={[
                             ]}
                             numberOfLines={1}
                         >
-                            {music.name}
+                            {music.title}
                         </Text>
                         <Text
                             style={[
@@ -150,7 +156,7 @@ style={[
                             },
                         ]}
                     >
-                        {music.duration}
+                        {formatDuration(music.duration)}
                     </Text>
                 </Pressable>
 
