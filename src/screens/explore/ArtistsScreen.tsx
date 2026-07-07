@@ -1,117 +1,157 @@
-import React from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { ArtistDeezer, ArtistPlaceholder } from "@components";
 import { Ionicons } from "@expo/vector-icons";
-import { useAppFont } from "@services";
-import { Artist } from "@models/artist";
+import { useAppFont, useAppTheme } from "@services";
+import { router } from "expo-router";
+import { ReactNode, useEffect, useRef } from "react";
+import {
+    ActivityIndicator,
+    Animated,
+    FlatList,
+    StyleSheet,
+    Text,
+    useWindowDimensions,
+    View,
+} from "react-native";
+import { useGetTopArtists } from "../../hooks/useGetTopArtists";
 
-interface MappedArtist extends Artist {
-    color: string;
+function FadeInItem({ children, delay }: { children: ReactNode; delay: number }) {
+    const opacity = useRef(new Animated.Value(0)).current;
+    const translateY = useRef(new Animated.Value(24)).current;
+
+    useEffect(() => {
+        Animated.parallel([
+            Animated.timing(opacity, {
+                toValue: 1,
+                duration: 380,
+                delay,
+                useNativeDriver: true,
+            }),
+            Animated.timing(translateY, {
+                toValue: 0,
+                duration: 380,
+                delay,
+                useNativeDriver: true,
+            }),
+        ]).start();
+    }, []);
+
+    return (
+        <Animated.View style={[styles.itemWrapper, { opacity, transform: [{ translateY }] }]}>
+            {children}
+        </Animated.View>
+    );
 }
 
-const MOCK_ARTISTS: MappedArtist[] = [
-    { id: 101, name: "DeepMind Wave", cantAlbums: 5, color: "#8B5CF6" },
-    { id: 102, name: "Cyber Explorer", cantAlbums: 2, color: "#00F2FE" },
-    { id: 103, name: "Stellar Harmony", cantAlbums: 4, color: "#FF007F" },
-    { id: 104, name: "Astro Orchestra", cantAlbums: 2, color: "#F59E0B" },
-    { id: 105, name: "Synth Rider", cantAlbums: 3, color: "#10B981" },
-    { id: 106, name: "Supernova Band", cantAlbums: 3, color: "#6366F1" },
-];
-
 export default function ArtistsScreen() {
-    const { fontFamilyBold, fontFamilyRegular } = useAppFont();
+    const { fontFamilyRegular } = useAppFont();
+    const { theme } = useAppTheme();
+    const { width: screenWidth } = useWindowDimensions();
+    const {
+        data: artists,
+        isLoading,
+        hasNextPage,
+        fetchNextPage,
+        isFetchingNextPage,
+    } = useGetTopArtists();
+
+    // 16px padding each side + 16px gap between columns (2 gaps for 3 cols)
+    const artistWidth = Math.floor((screenWidth - 32 - 32) / 3);
+
+    const handleEndReached = () => {
+        if (hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+        }
+    };
+
+    if (isLoading) {
+        return (
+            <FlatList
+                data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
+                keyExtractor={(i) => i.toString()}
+                numColumns={3}
+                columnWrapperStyle={styles.columnWrapper}
+                contentContainerStyle={styles.listContent}
+                showsVerticalScrollIndicator={false}
+                renderItem={() => (
+                    <View style={styles.itemWrapper}>
+                        <ArtistPlaceholder width={artistWidth} />
+                    </View>
+                )}
+            />
+        );
+    }
+
+    if (artists.length === 0) {
+        return (
+            <View style={styles.emptyContainer}>
+                <Ionicons name="people-outline" size={56} color={theme.text.disabled} />
+                <Text
+                    style={[
+                        styles.emptyText,
+                        { fontFamily: fontFamilyRegular, color: theme.text.secondary },
+                    ]}
+                >
+                    No se encontraron artistas
+                </Text>
+            </View>
+        );
+    }
 
     return (
         <FlatList
-            data={MOCK_ARTISTS}
+            data={artists}
             keyExtractor={(item) => item.id.toString()}
             numColumns={3}
-            columnWrapperStyle={styles.row}
+            columnWrapperStyle={styles.columnWrapper}
+            contentContainerStyle={styles.listContent}
             showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => (
-                <Pressable
-                    style={({ pressed }) => [
-                        styles.card,
-                        pressed && { opacity: 0.8, transform: [{ scale: 0.96 }] }
-                    ]}
-                >
-                    {/* Circular Avatar */}
-                    <View style={[styles.avatar, { backgroundColor: item.color }]}>
-                        <Ionicons name="person" size={28} color="#ffffff" style={styles.personIcon} />
-                        {/* Shiny overlay */}
-                        <View style={styles.glossyOverlay} />
-                    </View>
-
-                    {/* Text details */}
-                    <Text
-                        style={[styles.name, { fontFamily: fontFamilyBold }]}
-                        numberOfLines={1}
-                    >
-                        {item.name}
-                    </Text>
-                    <Text
-                        style={[styles.albumsCount, { fontFamily: fontFamilyRegular }]}
-                        numberOfLines={1}
-                    >
-                        {item.cantAlbums} {item.cantAlbums === 1 ? "álbum" : "álbumes"}
-                    </Text>
-                </Pressable>
+            onEndReached={handleEndReached}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={
+                isFetchingNextPage ? (
+                    <ActivityIndicator color={theme.primary.main} style={{ marginVertical: 16 }} />
+                ) : null
+            }
+            renderItem={({ item, index }) => (
+                <FadeInItem delay={Math.min(index, 9) * 75}>
+                    <ArtistDeezer
+                        artist={item}
+                        width={artistWidth}
+                        onPress={() =>
+                            router.push({
+                                pathname: "/explore/artists/albums/[artistId]",
+                                params: { artistId: item.id, artistName: item.name },
+                            })
+                        }
+                    />
+                </FadeInItem>
             )}
         />
     );
 }
 
 const styles = StyleSheet.create({
-    row: {
-        justifyContent: "space-between",
-        marginBottom: 20,
-    },
-    card: {
-        width: "30%",
-        alignItems: "center",
-        backgroundColor: "#151124", // Premium cosmic card background
-        borderRadius: 14,
-        paddingVertical: 12,
-        paddingHorizontal: 6,
-        borderWidth: 1.5,
-        borderColor: "#221b3a",
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 4,
-    },
-    avatar: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
+    emptyContainer: {
+        flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        position: "relative",
-        overflow: "hidden",
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.4,
-        shadowRadius: 3,
+        gap: 12,
+        marginTop: 64,
     },
-    personIcon: {
-        opacity: 0.9,
+    emptyText: {
+        fontSize: 15,
     },
-    glossyOverlay: {
-        ...StyleSheet.absoluteFillObject,
-        backgroundColor: "rgba(255, 255, 255, 0.08)",
+    listContent: {
+        paddingTop: 12,
+        paddingBottom: 32,
+        gap: 24,
     },
-    name: {
-        fontSize: 11,
-        color: "#ffffff",
-        marginTop: 8,
-        textAlign: "center",
-        width: "100%",
+    columnWrapper: {
+        gap: 16,
+        justifyContent: "flex-start",
     },
-    albumsCount: {
-        fontSize: 9,
-        color: "#a6a0c5", // Soft cosmic lavender
-        marginTop: 4,
-        textAlign: "center",
-        width: "100%",
+    itemWrapper: {
+        flex: 1,
+        alignItems: "center",
     },
 });

@@ -5,3 +5,5 @@ export { useGetSearchMusics } from "./useGetSearchMusics";
 export { useGetGenres } from "./useGetGenres";
 export { useGetAlbumsByGenre } from "./useGetAlbumsByGenre";
 export { useGetAlbumById } from "./useGetAlbumById";
+export { useGetTopArtists } from "./useGetTopArtists";
+export { useGetAlbumsByArtist } from "./useGetAlbumsByArtist";

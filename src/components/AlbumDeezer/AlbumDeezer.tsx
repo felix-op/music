@@ -48,7 +48,7 @@ export function AlbumDeezer({ album, width = 140, onPress }: AlbumDeezerProps) {
                     style={[styles.albumArtist, { fontFamily: fontFamilyRegular }]}
                     numberOfLines={1}
                 >
-                    {album.artist.name}
+                    {album.artist?.name ?? ""}
                 </Text>
             </View>
         </Pressable>

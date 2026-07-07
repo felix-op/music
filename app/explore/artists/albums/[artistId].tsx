@@ -1,0 +1,188 @@
+import { AlbumDeezer, AlbumPlaceholder } from "@components";
+import { Ionicons } from "@expo/vector-icons";
+import { useAppFont, useAppTheme } from "@services";
+import { router, Stack, useLocalSearchParams } from "expo-router";
+import { ReactNode, useEffect, useRef } from "react";
+import {
+    ActivityIndicator,
+    Animated,
+    FlatList,
+    Pressable,
+    StyleSheet,
+    Text,
+    useWindowDimensions,
+    View,
+} from "react-native";
+import { useGetAlbumsByArtist } from "../../../../src/hooks/useGetAlbumsByArtist";
+
+type Params = {
+    artistId: string;
+    artistName?: string;
+};
+
+function FadeInItem({ children, delay }: { children: ReactNode; delay: number }) {
+    const opacity = useRef(new Animated.Value(0)).current;
+    const translateY = useRef(new Animated.Value(24)).current;
+
+    useEffect(() => {
+        Animated.parallel([
+            Animated.timing(opacity, {
+                toValue: 1,
+                duration: 380,
+                delay,
+                useNativeDriver: true,
+            }),
+            Animated.timing(translateY, {
+                toValue: 0,
+                duration: 380,
+                delay,
+                useNativeDriver: true,
+            }),
+        ]).start();
+    }, []);
+
+    return (
+        <Animated.View style={[styles.itemWrapper, { opacity, transform: [{ translateY }] }]}>
+            {children}
+        </Animated.View>
+    );
+}
+
+export default function ArtistAlbumsPage() {
+    const { artistId, artistName } = useLocalSearchParams<Params>();
+    const { fontFamilyRegular } = useAppFont();
+    const { theme } = useAppTheme();
+    const { width: screenWidth } = useWindowDimensions();
+    const {
+        data: albums,
+        isLoading,
+        hasNextPage,
+        fetchNextPage,
+        isFetchingNextPage,
+    } = useGetAlbumsByArtist(Number(artistId));
+
+    // 16px padding each side + 16px gap between columns
+    const albumWidth = Math.floor((screenWidth - 48) / 2);
+    const pageTitle = artistName ? `Álbumes de ${artistName}` : "Álbumes";
+
+    const handleEndReached = () => {
+        if (hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+        }
+    };
+
+    return (
+        <View style={styles.container}>
+            <Stack.Screen
+                options={{
+                    headerShown: true,
+                    title: pageTitle,
+                    animation: "slide_from_right",
+                    headerBackVisible: false,
+                    headerLeft: () => (
+                        <Pressable
+                            onPress={() => router.back()}
+                            style={({ pressed }) => [
+                                styles.backButton,
+                                pressed && { opacity: 0.5 },
+                            ]}
+                        >
+                            <Ionicons
+                                name="chevron-back"
+                                size={26}
+                                color={theme.text.primary}
+                            />
+                        </Pressable>
+                    ),
+                }}
+            />
+
+            {isLoading ? (
+                <FlatList
+                    data={[1, 2, 3, 4]}
+                    keyExtractor={(i) => i.toString()}
+                    numColumns={2}
+                    columnWrapperStyle={styles.columnWrapper}
+                    contentContainerStyle={styles.listContent}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={() => (
+                        <View style={styles.itemWrapper}>
+                            <AlbumPlaceholder width={albumWidth} />
+                        </View>
+                    )}
+                />
+            ) : albums.length === 0 ? (
+                <View style={styles.emptyContainer}>
+                    <Ionicons name="disc-outline" size={56} color={theme.text.disabled} />
+                    <Text
+                        style={[
+                            styles.emptyText,
+                            { fontFamily: fontFamilyRegular, color: theme.text.secondary },
+                        ]}
+                    >
+                        Sin álbumes disponibles
+                    </Text>
+                </View>
+            ) : (
+                <FlatList
+                    data={albums}
+                    keyExtractor={(item) => item.id.toString()}
+                    numColumns={2}
+                    columnWrapperStyle={styles.columnWrapper}
+                    contentContainerStyle={styles.listContent}
+                    showsVerticalScrollIndicator={false}
+                    onEndReached={handleEndReached}
+                    onEndReachedThreshold={0.5}
+                    ListFooterComponent={
+                        isFetchingNextPage ? (
+                            <ActivityIndicator color={theme.primary.main} style={{ marginVertical: 16 }} />
+                        ) : null
+                    }
+                    renderItem={({ item, index }) => (
+                        <FadeInItem delay={Math.min(index, 9) * 75}>
+                            <AlbumDeezer
+                                album={item}
+                                width={albumWidth}
+                                onPress={() =>
+                                    router.push({
+                                        pathname: "/explore/albums/[id]",
+                                        params: { id: item.id, nombre: item.title },
+                                    })
+                                }
+                            />
+                        </FadeInItem>
+                    )}
+                />
+            )}
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    backButton: {
+        paddingRight: 8,
+    },
+    emptyContainer: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 12,
+    },
+    emptyText: {
+        fontSize: 15,
+    },
+    listContent: {
+        padding: 16,
+        paddingBottom: 32,
+        gap: 20,
+    },
+    columnWrapper: {
+        gap: 16,
+    },
+    itemWrapper: {
+        flex: 1,
+    },
+});

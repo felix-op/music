@@ -24,3 +24,7 @@ export {
     DeezerAlbumListResponse,
     DeezerGenreListResponse,
 } from "./albumDezzer";
+
+export {
+    ArtistDezzerModel
+} from "./artistDezzer";
