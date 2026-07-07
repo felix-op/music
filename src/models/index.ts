@@ -28,3 +28,8 @@ export {
 export {
     ArtistDezzerModel
 } from "./artistDezzer";
+
+export {
+    Playlist,
+    PlaylistSong
+} from "./playlist";

@@ -37,6 +37,10 @@ export interface ColorScale {
     900: string;
 }
 
+export interface ThemeShape {
+    borderRadius: number;
+}
+
 export interface ThemePalette {
     mode: 'light' | 'dark';
     primary: PaletteIntent;
@@ -54,4 +58,5 @@ export interface ThemePalette {
         white: string;
     };
     grey: ColorScale;
+    shape: ThemeShape;
 }

@@ -71,4 +71,7 @@ export const defaultTheme: ThemePalette = {
         800: "#392E5C",
         900: "#201A36",
     },
+    shape: {
+        borderRadius: 10,
+    },
 };
