@@ -10,10 +10,10 @@ import {
     FlatList,
     Pressable,
     StyleSheet,
-    Text,
     View,
     useWindowDimensions,
 } from "react-native";
+import { Typography } from "@components";
 
 type Params = {
     genre: string;
@@ -50,7 +50,6 @@ function FadeInItem({ children, delay }: { children: ReactNode; delay: number })
 
 export default function GenreAlbumsPage() {
     const { genre: genreId, genreName } = useLocalSearchParams<Params>();
-    const { fontFamilyRegular } = useAppFont();
     const { theme } = useAppTheme();
     const { width: screenWidth } = useWindowDimensions();
     const {
@@ -114,14 +113,13 @@ export default function GenreAlbumsPage() {
             ) : albums.length === 0 ? (
                 <View style={styles.emptyContainer}>
                     <Ionicons name="disc-outline" size={56} color={theme.text.disabled} />
-                    <Text
-                        style={[
-                            styles.emptyText,
-                            { fontFamily: fontFamilyRegular, color: theme.text.secondary },
-                        ]}
+                    <Typography
+                        variant="body"
+                        color="secondary"
+                        style={styles.emptyText}
                     >
                         Sin álbumes en este género
-                    </Text>
+                    </Typography>
                 </View>
             ) : (
                 <FlatList
@@ -171,9 +169,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         gap: 12,
     },
-    emptyText: {
-        fontSize: 15,
-    },
+    emptyText: {},
     listContent: {
         padding: 16,
         paddingBottom: 32,

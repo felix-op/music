@@ -1,5 +1,5 @@
-import { Navbar } from "@components";
-import { FontProvider, ThemeProvider, useAppFont, useAppTheme } from "@services";
+import { Navbar, MiniPlayer } from "@components/index";
+import { FontProvider, ThemeProvider, PlayerProvider, useAppFont, useAppTheme } from "@services";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -13,7 +13,9 @@ export default function RootLayout() {
     <ThemeProvider>
       <FontProvider>
         <QueryClientProvider client={client}>
-          <InnerLayout />
+          <PlayerProvider>
+            <InnerLayout />
+          </PlayerProvider>
         </QueryClientProvider>
       </FontProvider>
     </ThemeProvider>
@@ -57,6 +59,7 @@ function InnerLayout() {
         right: 10,
         bottom: bottom + 20,
       }}>
+        <MiniPlayer />
         <Navbar />
       </View>
     </View>

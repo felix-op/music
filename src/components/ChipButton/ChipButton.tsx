@@ -1,6 +1,6 @@
-import { Pressable, Text } from "react-native";
+import { Pressable } from "react-native";
+import { Typography } from "@components";
 import { styles } from "./estilos";
-import { useAppFont } from "@services";
 
 type TProps = {
     title: string;
@@ -9,8 +9,6 @@ type TProps = {
 };
 
 export function ChipButton({ title, active = false, onPress }: TProps) {
-    const { fontFamilyBold, fontFamilyRegular } = useAppFont();
-
     return (
         <Pressable
             onPress={onPress}
@@ -20,15 +18,14 @@ export function ChipButton({ title, active = false, onPress }: TProps) {
                 pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] } // Subtle micro-animation when pressed
             ]}
         >
-            <Text
-                style={[
-                    styles.text,
-                    { fontFamily: active ? fontFamilyBold : fontFamilyRegular },
-                    active ? styles.textActive : styles.textInactive
-                ]}
+            <Typography
+                variant="bodySmall"
+                weight={active ? "bold" : "regular"}
+                color={active ? "white" : "disabled"}
+                style={active ? styles.textActive : styles.textInactive}
             >
                 {title}
-            </Text>
+            </Typography>
         </Pressable>
     );
 }

@@ -4,7 +4,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAppFont, useAppTheme } from "@services";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { ActivityIndicator, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Image, Pressable, StyleSheet, View } from "react-native";
+import { Typography } from "@components";
 import { useGetMusicById } from "../../../src/hooks/useGetMusicById";
 
 type Params = {
@@ -22,7 +23,6 @@ const formatDuration = (seconds: number) => {
 export default function MusicDetailPage() {
     const { id, musicName } = useLocalSearchParams<Params>();
     const { theme } = useAppTheme();
-    const { fontFamilyRegular, fontFamilyBold } = useAppFont(); // Asumiendo que tienes fontFamilyBold
 
     const { data: music, isLoading } = useGetMusicById(Number(id));
     const [isOptionsModalVisible, setOptionsModalVisible] = useState(false);
@@ -80,9 +80,9 @@ export default function MusicDetailPage() {
             {isLoading ? (
                 <ActivityIndicator size="large" color={theme.primary.main} />
             ) : !music ? (
-                <Text style={{ color: theme.text.primary, fontFamily: fontFamilyRegular }}>
+                <Typography variant="body">
                     Música no encontrada.
-                </Text>
+                </Typography>
             ) : (
                 <View style={styles.content}>
                     {/* Imagen del Album */}
@@ -98,15 +98,15 @@ export default function MusicDetailPage() {
 
                     {/* Metadatos Principales */}
                     <View style={styles.metadataContainer}>
-                        <Text style={[styles.title, { color: theme.text.primary, fontFamily: fontFamilyBold }]}>
+                        <Typography variant="h3" weight="bold" style={styles.title}>
                             {music.title}
-                        </Text>
-                        <Text style={[styles.subtitle, { color: theme.text.secondary, fontFamily: fontFamilyRegular }]}>
+                        </Typography>
+                        <Typography variant="bodyLarge" color="secondary" style={styles.subtitle}>
                             {music.artist?.name} • {music.album?.title}
-                        </Text>
-                        <Text style={[styles.tertiaryText, { color: theme.text.disabled, fontFamily: fontFamilyRegular }]}>
+                        </Typography>
+                        <Typography variant="body" color="disabled" style={styles.tertiaryText}>
                             {formatDuration(music.duration)}
-                        </Text>
+                        </Typography>
                     </View>
 
                     {/* Controles */}
@@ -185,17 +185,14 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     title: {
-        fontSize: 24,
         textAlign: "center",
         marginBottom: 8,
     },
     subtitle: {
-        fontSize: 16,
         textAlign: "center",
         marginBottom: 4,
     },
     tertiaryText: {
-        fontSize: 14,
         textAlign: "center",
     },
     controlsContainer: {

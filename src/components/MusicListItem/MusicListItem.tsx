@@ -1,16 +1,15 @@
+import { Typography } from "@components";
 import { Ionicons } from "@expo/vector-icons";
 import { MusicDezzerModel } from "@models/musicDezzer";
-import { useAppFont, useAppTheme } from "@services";
+import { useAppTheme } from "@services";
 import { useRef, useState } from "react";
-import { Image } from "react-native";
 import {
-    Animated,
-    PanResponder,
+    Animated, Image, PanResponder,
     Pressable,
-    Text,
     View,
-    useWindowDimensions,
+    useWindowDimensions
 } from "react-native";
+import usePlayList from "../../hooks/usePlayList";
 import { ARROW_WIDTH, styles } from "./estilos";
 
 type TProps = {
@@ -27,11 +26,12 @@ const formatDuration = (seconds: number) => {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
 };
 
-export function MusicListItem({ music, selected, onPress, onSelect, hideAlbumCover = false }: TProps) {
+export function MusicListItem({ music, onPress, onSelect, hideAlbumCover = false }: TProps) {
+    const { currentSong, play } = usePlayList();
     const { theme } = useAppTheme();
-    const { fontFamilyBold, fontFamilyRegular } = useAppFont();
     const { width: screenWidth } = useWindowDimensions();
     const [containerWidth, setContainerWidth] = useState(screenWidth);
+    const selected = Number(currentSong?.id || 0) === music.id;
 
     const translateX = useRef(new Animated.Value(0)).current;
     const isOpen = useRef(false);
@@ -76,7 +76,15 @@ export function MusicListItem({ music, selected, onPress, onSelect, hideAlbumCov
         if (isOpen.current) {
             snapTo(0);
         } else {
-            onSelect();
+            play({ 
+                source: "deezer", 
+                id: music.id.toString(), 
+                title: music.title,
+                artist: music.artist.name, 
+                duration: music.duration,
+                coverUrl: music.album?.cover_small 
+            });
+            //onSelect();
         }
     };
 
@@ -132,43 +140,28 @@ style={[
                     )}
 
                     <View style={styles.infoCol}>
-                        <Text
-                            style={[
-                                styles.title,
-                                {
-                                    fontFamily: fontFamilyBold,
-                                    color: theme.text.primary,
-                                },
-                            ]}
+                        <Typography
+                            variant="body"
+                            weight="bold"
                             numberOfLines={1}
                         >
                             {music.title}
-                        </Text>
-                        <Text
-                            style={[
-                                styles.subtitle,
-                                {
-                                    fontFamily: fontFamilyRegular,
-                                    color: theme.text.secondary,
-                                },
-                            ]}
+                        </Typography>
+                        <Typography
+                            variant="caption"
+                            color="secondary"
                             numberOfLines={1}
                         >
                             {music.artist.name}
-                        </Text>
+                        </Typography>
                     </View>
 
-                    <Text
-                        style={[
-                            styles.duration,
-                            {
-                                fontFamily: fontFamilyRegular,
-                                color: theme.text.secondary,
-                            },
-                        ]}
+                    <Typography
+                        variant="caption"
+                        color="secondary"
                     >
                         {formatDuration(music.duration)}
-                    </Text>
+                    </Typography>
                 </Pressable>
 
                 <View

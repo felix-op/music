@@ -4,8 +4,9 @@ import { MusicDezzerModel } from "@models/musicDezzer";
 import { useAppFont, useAppTheme } from "@services";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, Pressable, StyleSheet, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { Typography } from "@components";
 
 type Params = {
     id: string;
@@ -15,7 +16,6 @@ type Params = {
 export default function AlbumDetailPage() {
     const { id, nombre } = useLocalSearchParams<Params>();
     const { theme } = useAppTheme();
-    const { fontFamilyBold, fontFamilyRegular } = useAppFont();
     const [selectedId, setSelectedId] = useState<number | null>(null);
 
     const { data: album, isLoading } = useGetAlbumById(Number(id));
@@ -74,24 +74,22 @@ export default function AlbumDetailPage() {
                             )}
                             <View style={styles.glossy} />
                         </View>
-                        <Text
-                            style={[
-                                styles.albumName,
-                                { color: theme.text.primary, fontFamily: fontFamilyBold },
-                            ]}
+                        <Typography
+                            variant="h3"
+                            weight="bold"
+                            style={styles.albumName}
                             numberOfLines={2}
                         >
                             {album.title}
-                        </Text>
-                        <Text
-                            style={[
-                                styles.artistName,
-                                { color: theme.text.secondary, fontFamily: fontFamilyRegular },
-                            ]}
+                        </Typography>
+                        <Typography
+                            variant="body"
+                            color="secondary"
+                            style={styles.artistName}
                             numberOfLines={1}
                         >
                             {artistNames}
-                        </Text>
+                        </Typography>
                     </>
                 ) : (
                     <View
@@ -172,12 +170,10 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(255,255,255,0.05)",
     },
     albumName: {
-        fontSize: 20,
         marginTop: 18,
         textAlign: "center",
     },
     artistName: {
-        fontSize: 14,
         marginTop: 6,
         textAlign: "center",
     },

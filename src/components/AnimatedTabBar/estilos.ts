@@ -31,13 +31,7 @@ export const styles = StyleSheet.create({
         paddingVertical: 10,
         zIndex: 1,
     },
-    tabText: {
-        fontSize: 14,
-    },
-    tabTextActive: {
-        color: "#ffffff",
-    },
-    tabTextInactive: {
-        color: "#a6a0c5",
-    },
+    tabText: {},
+    tabTextActive: {},
+    tabTextInactive: {},
 });

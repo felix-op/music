@@ -8,10 +8,10 @@ import {
     Animated,
     FlatList,
     StyleSheet,
-    Text,
     useWindowDimensions,
     View,
 } from "react-native";
+import { Typography } from "@components";
 import { useGetTopArtists } from "../../hooks/useGetTopArtists";
 
 function FadeInItem({ children, delay }: { children: ReactNode; delay: number }) {
@@ -85,14 +85,13 @@ export default function ArtistsScreen() {
         return (
             <View style={styles.emptyContainer}>
                 <Ionicons name="people-outline" size={56} color={theme.text.disabled} />
-                <Text
-                    style={[
-                        styles.emptyText,
-                        { fontFamily: fontFamilyRegular, color: theme.text.secondary },
-                    ]}
+                <Typography
+                    variant="body"
+                    color="secondary"
+                    style={styles.emptyText}
                 >
                     No se encontraron artistas
-                </Text>
+                </Typography>
             </View>
         );
     }
@@ -139,7 +138,7 @@ const styles = StyleSheet.create({
         marginTop: 64,
     },
     emptyText: {
-        fontSize: 15,
+        textAlign: "center",
     },
     listContent: {
         paddingTop: 12,

@@ -1,8 +1,9 @@
 import { TabItem } from "@models";
-import { useAppFont } from "@services";
+import { useAppFont, useAppTheme } from "@services";
 import { useEffect, useRef } from "react";
-import { Animated, Pressable, Text, View, useWindowDimensions } from "react-native";
+import { Animated, Pressable, View, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Typography } from "@components";
 import { styles } from "./estilos";
 
 interface AnimatedTabBarProps {
@@ -12,9 +13,9 @@ interface AnimatedTabBarProps {
 }
 
 export function AnimatedTabBar({ tabs, activeTab, onTabChange }: AnimatedTabBarProps) {
-    const { fontFamilyBold, fontFamilyRegular } = useAppFont();
     const { left, right } = useSafeAreaInsets();
     const { width: windowWidth } = useWindowDimensions();
+    const { theme } = useAppTheme();
 
     const containerWidth = windowWidth - (left + right + 20);
     const tabWidth = (containerWidth - 8) / tabs.length;
@@ -34,13 +35,14 @@ export function AnimatedTabBar({ tabs, activeTab, onTabChange }: AnimatedTabBarP
     }, [activeTab, tabWidth, tabs]);
 
     return (
-        <View style={styles.chipRow}>
+        <View style={[styles.chipRow, { borderRadius: theme.shape.borderRadius }]}>
             <Animated.View
                 style={[
                     styles.activeCapsule,
                     {
                         width: tabWidth,
                         transform: [{ translateX: slideAnim }],
+                        borderRadius: theme.shape.borderRadius > 4 ? theme.shape.borderRadius - 4 : 0,
                     },
                 ]}
             />
@@ -53,15 +55,13 @@ export function AnimatedTabBar({ tabs, activeTab, onTabChange }: AnimatedTabBarP
                         style={styles.tabButton}
                         onPress={() => onTabChange(tab.id)}
                     >
-                        <Text
-                            style={[
-                                styles.tabText,
-                                { fontFamily: isActive ? fontFamilyBold : fontFamilyRegular },
-                                isActive ? styles.tabTextActive : styles.tabTextInactive,
-                            ]}
+                        <Typography
+                            variant="body"
+                            weight={isActive ? "bold" : "regular"}
+                            color={isActive ? "white" : "secondary"}
                         >
                             {tab.label}
-                        </Text>
+                        </Typography>
                     </Pressable>
                 );
             })}

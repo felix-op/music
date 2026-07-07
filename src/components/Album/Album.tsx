@@ -1,8 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Album as AlbumType } from "@models/album";
-import { useAppFont } from "@services";
 import { router } from "expo-router";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
+import { Typography } from "@components";
 import { styles } from "./estilos";
 
 export type AlbumProps = {
@@ -11,8 +11,6 @@ export type AlbumProps = {
 };
 
 export function Album({ album, width = "48%" }: AlbumProps) {
-    const { fontFamilyBold, fontFamilyRegular } = useAppFont();
-
     const handleRoute = () => {
         router.push({
             pathname: `/explore/albums/[id]`,
@@ -41,18 +39,12 @@ export function Album({ album, width = "48%" }: AlbumProps) {
 
             {/* Text info */}
             <View style={styles.infoArea}>
-                <Text
-                    style={[styles.albumTitle, { fontFamily: fontFamilyBold }]}
-                    numberOfLines={1}
-                >
+                <Typography variant="body" weight="bold" color="white" numberOfLines={1}>
                     {album.name}
-                </Text>
-                <Text
-                    style={[styles.albumArtist, { fontFamily: fontFamilyRegular }]}
-                    numberOfLines={1}
-                >
+                </Typography>
+                <Typography variant="caption" color="secondary" numberOfLines={1}>
                     {album.artist.name}
-                </Text>
+                </Typography>
             </View>
         </Pressable>
     );

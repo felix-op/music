@@ -1,9 +1,11 @@
 import { useEffect, useRef } from "react";
 import { Animated, View } from "react-native";
 import { styles } from "./estilos";
+import { useAppTheme } from "@services";
 
 export function MusicPlaceholder() {
     const pulseAnim = useRef(new Animated.Value(0.4)).current;
+    const { theme } = useAppTheme();
 
     useEffect(() => {
         const pulse = Animated.loop(
@@ -18,7 +20,7 @@ export function MusicPlaceholder() {
 
     return (
         <View style={styles.row}>
-            <Animated.View style={[styles.circle, { opacity: pulseAnim }]} />
+            <Animated.View style={[styles.circle, { opacity: pulseAnim, borderRadius: theme.shape.borderRadius / 1.5 }]} />
             <View style={styles.infoCol}>
                 <Animated.View style={[styles.titleLine, { opacity: pulseAnim }]} />
                 <Animated.View style={[styles.subtitleLine, { opacity: pulseAnim }]} />

@@ -16,5 +16,16 @@ export { MusicListItem } from "./MusicListItem/MusicListItem";
 export { MusicPlaceholder } from "./MusicPlaceholder/MusicPlaceholder";
 export { SimpleLoading } from "./SimpleLoading/SimpleLoading";
 export { SearchInput } from "./SearchInput/SearchInput";
+export { MiniPlayer } from "./MiniPlayer/MiniPlayer";
+export { InputText } from "./InputText/InputText";
 
 export { MenuModal } from "./MenuModal/MenuModal";
+export { FormModal } from "./FormModal/FormModal";
+
+export { BotonSimple } from "./Buttons/BotonSimple";
+export { BotonGuardar } from "./Buttons/BotonGuardar";
+export { BotonCancelar } from "./Buttons/BotonCancelar";
+export { BotonGuardarLista } from "./Buttons/BotonGuardarLista";
+export { BotonContinuar } from "./Buttons/BotonContinuar";
+export { BotonIconoRecargar } from "./Buttons/BotonIconoRecargar";
+export { BotonIconoContinuar } from "./Buttons/BotonIconoContinuar";

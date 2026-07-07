@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Animated, View } from "react-native";
 import { styles } from "./estilos";
+import { useAppTheme } from "@services";
 
 type TProps = {
     width?: number | string;
@@ -8,6 +9,7 @@ type TProps = {
 
 export function AlbumPlaceholder({ width = 140 }: TProps) {
     const pulseAnim = useRef(new Animated.Value(0.4)).current;
+    const { theme } = useAppTheme();
 
     useEffect(() => {
         const pulse = Animated.loop(
@@ -31,7 +33,7 @@ export function AlbumPlaceholder({ width = 140 }: TProps) {
     return (
         <View style={{ width: width as any }}>
             {/* Animated cover art container */}
-            <Animated.View style={[styles.coverContainer, { opacity: pulseAnim }]} />
+            <Animated.View style={[styles.coverContainer, { opacity: pulseAnim, borderRadius: theme.shape.borderRadius / 1.5 }]} />
 
             {/* Text info */}
             <View style={styles.infoArea}>

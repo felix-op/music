@@ -17,7 +17,7 @@ export function Header({ title, hideBack = false }: TProps) {
             options={{
                 headerShown: true,
                 title,
-                headerBackVisible: !hideBack,
+                headerBackVisible: false,
                 headerLeft: () => !hideBack ? (
                     <Pressable
                         onPress={() => router.back()}

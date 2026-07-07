@@ -49,15 +49,11 @@ export const styles = StyleSheet.create({
     marginLeft: 14,
     justifyContent: "center",
   },
-  title: {
-    fontSize: 14,
-  },
+  title: {},
   subtitle: {
-    fontSize: 12,
     marginTop: 3,
   },
   duration: {
-    fontSize: 12,
     marginLeft: 12,
   },
   arrowButton: {

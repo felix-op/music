@@ -1,9 +1,10 @@
 import { Stack } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { FontOption, useAppFont } from "@services";
+import { Pressable, StyleSheet, View } from "react-native";
+import { useAppFont } from "@services";
+import { Typography } from "@components";
 
 export default function SystemSettingsPage() {
-    const { selectedFont, changeFont, fontFamilyRegular, fontFamilyBold, fontOptions } = useAppFont();
+    const { selectedFont, changeFont, fontOptions } = useAppFont();
 
     return (
         <View style={estilos.contenedor}>
@@ -14,12 +15,12 @@ export default function SystemSettingsPage() {
                 }}
             />
 
-            <Text style={[estilos.seccionTitulo, { fontFamily: fontFamilyBold }]}>
+            <Typography variant="h3" weight="bold" style={estilos.seccionTitulo}>
                 Personalizar Tipografía
-            </Text>
-            <Text style={[estilos.seccionSubtitulo, { fontFamily: fontFamilyRegular }]}>
+            </Typography>
+            <Typography variant="body" color="secondary" style={estilos.seccionSubtitulo}>
                 Selecciona una fuente decorativa o clásica para las cabeceras y títulos del reproductor:
-            </Text>
+            </Typography>
 
             <View style={estilos.tarjetero}>
                 {fontOptions.map((item) => {
@@ -37,17 +38,17 @@ export default function SystemSettingsPage() {
                         >
                             <View style={estilos.infoTarjeta}>
                                 <View style={estilos.filaTitulo}>
-                                    <Text style={[estilos.labelTarjeta, { fontFamily: fontFamilyBold }]}>
+                                    <Typography variant="bodyLarge" weight="bold" style={estilos.labelTarjeta}>
                                         {item.label}
-                                    </Text>
+                                    </Typography>
                                     {esActivo && <View style={estilos.indicadorActivo} />}
                                 </View>
                             </View>
 
                             <View style={estilos.contenedorMuestra}>
-                                <Text style={[estilos.textoMuestra, { fontFamily: previewFont }]}>
+                                <Typography variant="body" style={[estilos.textoMuestra, { fontFamily: previewFont }]}>
                                     {item.sample}
-                                </Text>
+                                </Typography>
                             </View>
                         </Pressable>
                     );
@@ -63,13 +64,9 @@ const estilos = StyleSheet.create({
         paddingTop: 10,
     },
     seccionTitulo: {
-        fontSize: 22,
-        color: "#ffffff",
         marginBottom: 6,
     },
     seccionSubtitulo: {
-        fontSize: 14,
-        color: "#a6a0c5", // Soft cosmic lavender
         lineHeight: 20,
         marginBottom: 20,
     },
@@ -106,8 +103,6 @@ const estilos = StyleSheet.create({
         marginBottom: 4,
     },
     labelTarjeta: {
-        fontSize: 16,
-        color: "#ffffff",
         fontWeight: "600",
     },
     indicadorActivo: {
@@ -133,8 +128,6 @@ const estilos = StyleSheet.create({
         borderColor: "#221b3a", // Cosmic dark purple border
     },
     textoMuestra: {
-        fontSize: 14,
-        color: "#ffffff",
         textAlign: "center",
     },
 });

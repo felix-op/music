@@ -25,14 +25,8 @@ export const styles = StyleSheet.create({
         borderColor: "#8B5CF6", // Electric neon violet border for active item
     },
     text: {
-        fontSize: 13,
-        fontWeight: "600",
         textAlign: "center",
     },
-    textInactive: {
-        color: "#8b86a4", // Soft cosmic lavender
-    },
-    textActive: {
-        color: "#ffffff", // Pure white for high contrast
-    },
+    textInactive: {},
+    textActive: {},
 });

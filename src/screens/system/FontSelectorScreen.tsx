@@ -1,20 +1,29 @@
 import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { FontOption, useAppFont } from "@services";
-import { useAppTheme } from "@services";
+import { Pressable, StyleSheet, View } from "react-native";
+import { useAppFont, useAppTheme } from "@services";
+import { Typography } from "@components";
 
 export default function FontSelectorScreen() {
-    const { selectedFont, changeFont, fontFamilyRegular, fontFamilyBold, fontOptions } = useAppFont();
-    const { colors } = useAppTheme();
+    const { selectedFont, changeFont, fontOptions } = useAppFont();
+    const { theme } = useAppTheme();
+    const colors = {
+        text: theme.text.primary,
+        textMuted: theme.text.secondary,
+        surface: theme.background.paper,
+        primary: theme.primary.main,
+        secondary: theme.secondary.main,
+        background: theme.background.default,
+        border: theme.divider,
+    };
 
     return (
         <View style={estilos.contenedor}>
-            <Text style={[estilos.seccionTitulo, { fontFamily: fontFamilyBold, color: colors.text }]}>
+            <Typography variant="h3" weight="bold" style={[estilos.seccionTitulo, { color: colors.text }]}>
                 Personalizar Tipografía
-            </Text>
-            <Text style={[estilos.seccionSubtitulo, { fontFamily: fontFamilyRegular, color: colors.textMuted }]}>
+            </Typography>
+            <Typography variant="body" style={[estilos.seccionSubtitulo, { color: colors.textMuted }]}>
                 Selecciona una fuente decorativa o clásica para las cabeceras y títulos del reproductor:
-            </Text>
+            </Typography>
 
             <View style={estilos.tarjetero}>
                 {fontOptions.map((item) => {
@@ -35,17 +44,17 @@ export default function FontSelectorScreen() {
                         >
                             <View style={estilos.infoTarjeta}>
                                 <View style={estilos.filaTitulo}>
-                                    <Text style={[estilos.labelTarjeta, { fontFamily: fontFamilyBold, color: colors.text }]}>
+                                    <Typography variant="bodyLarge" weight="bold" style={{ color: colors.text }}>
                                         {item.label}
-                                    </Text>
+                                    </Typography>
                                     {esActivo && <View style={[estilos.indicadorActivo, { backgroundColor: colors.secondary }]} />}
                                 </View>
                             </View>
 
                             <View style={[estilos.contenedorMuestra, { backgroundColor: colors.background, borderColor: colors.border }]}>
-                                <Text style={[estilos.textoMuestra, { fontFamily: previewFont, color: colors.text }]}>
+                                <Typography variant="body" style={[estilos.textoMuestra, { fontFamily: previewFont, color: colors.text }]}>
                                     {item.sample}
-                                </Text>
+                                </Typography>
                             </View>
                         </Pressable>
                     );
@@ -62,11 +71,9 @@ const estilos = StyleSheet.create({
         paddingHorizontal: 20,
     },
     seccionTitulo: {
-        fontSize: 22,
         marginBottom: 6,
     },
     seccionSubtitulo: {
-        fontSize: 14,
         lineHeight: 20,
         marginBottom: 20,
     },
@@ -97,7 +104,6 @@ const estilos = StyleSheet.create({
         marginBottom: 4,
     },
     labelTarjeta: {
-        fontSize: 16,
         fontWeight: "600",
     },
     indicadorActivo: {
@@ -119,7 +125,6 @@ const estilos = StyleSheet.create({
         borderWidth: 1,
     },
     textoMuestra: {
-        fontSize: 14,
         textAlign: "center",
     },
 });

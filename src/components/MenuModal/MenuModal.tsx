@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useAppFont, useAppTheme } from "@services";
-import { Modal, Pressable, Text } from "react-native";
+import { Modal, Pressable } from "react-native";
+import { Typography } from "@components";
 import { styles } from "./estilos";
 
 export type MenuOption = {
@@ -19,7 +20,6 @@ interface MenuModalProps {
 
 export const MenuModal = ({ visible, onClose, title, options }: MenuModalProps) => {
     const { theme } = useAppTheme();
-    const { fontFamilyRegular, fontFamilyBold } = useAppFont();
 
     return (
         <Modal
@@ -30,14 +30,14 @@ export const MenuModal = ({ visible, onClose, title, options }: MenuModalProps) 
         >
             <Pressable style={styles.overlay} onPress={onClose}>
                 <Pressable 
-                    style={[styles.content, { backgroundColor: theme.background.paper }]}
+                    style={[styles.content, { backgroundColor: theme.background.paper, borderRadius: theme.shape.borderRadius }]}
                     // Previene que los toques dentro del modal lo cierren
                     onPress={(e) => e.stopPropagation()}
                 >
                     {title && (
-                        <Text style={[styles.title, { color: theme.text.primary, fontFamily: fontFamilyBold }]}>
+                        <Typography variant="subtitle" weight="bold" style={styles.title}>
                             {title}
-                        </Text>
+                        </Typography>
                     )}
                     
                     {options.map((option, index) => (
@@ -47,7 +47,7 @@ export const MenuModal = ({ visible, onClose, title, options }: MenuModalProps) 
                                 styles.option,
                                 //pressed && { opacity: 0.6 } // Efecto visual al presionar
                                 // Alternativa con color de fondo:
-                                pressed && { backgroundColor: theme.action.hover, borderRadius: 8 }
+                                pressed && { backgroundColor: theme.action.hover, borderRadius: theme.shape.borderRadius / 2 }
                             ]}
                             onPress={() => {
                                 option.onPress();
@@ -59,12 +59,12 @@ export const MenuModal = ({ visible, onClose, title, options }: MenuModalProps) 
                                 size={24} 
                                 color={option.color ?? theme.text.primary} 
                             />
-                            <Text style={[
-                                styles.optionText, 
-                                { color: option.color ?? theme.text.primary, fontFamily: fontFamilyRegular }
-                            ]}>
+                            <Typography 
+                                variant="bodyLarge"
+                                style={[styles.optionText, option.color ? { color: option.color } : undefined]}
+                            >
                                 {option.label}
-                            </Text>
+                            </Typography>
                         </Pressable>
                     ))}
                 </Pressable>

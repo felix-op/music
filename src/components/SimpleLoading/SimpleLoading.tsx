@@ -1,6 +1,6 @@
 import React from "react";
-import { ActivityIndicator, Text, View } from "react-native";
-import { useAppFont } from "@services";
+import { ActivityIndicator, View } from "react-native";
+import { Typography } from "@components";
 import { styles } from "./estilos";
 
 type TProps = {
@@ -8,14 +8,13 @@ type TProps = {
 };
 
 export function SimpleLoading({ message = "Conectando con el cosmos..." }: TProps) {
-    const { fontFamilyRegular } = useAppFont();
 
     return (
         <View style={styles.loaderContainer}>
             <ActivityIndicator size="large" color="#8B5CF6" />
-            <Text style={[styles.loaderText, { fontFamily: fontFamilyRegular }]}>
+            <Typography variant="body" color="secondary" style={styles.loaderText}>
                 {message}
-            </Text>
+            </Typography>
         </View>
     );
 }

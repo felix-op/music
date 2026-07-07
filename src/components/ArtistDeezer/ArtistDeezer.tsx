@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { ArtistDezzerModel } from "@models/artistDezzer";
-import { useAppFont } from "@services";
-import { Image, Pressable, Text, View } from "react-native";
+import { Image, Pressable, View } from "react-native";
+import { Typography } from "@components";
 import { styles } from "./estilos";
 
 export type ArtistDeezerProps = {
@@ -11,7 +11,6 @@ export type ArtistDeezerProps = {
 };
 
 export function ArtistDeezer({ artist, width = 110, onPress }: ArtistDeezerProps) {
-    const { fontFamilyBold } = useAppFont();
     const pictureUrl = artist.picture_medium ?? artist.picture_big ?? artist.picture ?? null;
 
     return (
@@ -39,12 +38,9 @@ export function ArtistDeezer({ artist, width = 110, onPress }: ArtistDeezerProps
             </View>
 
             <View style={styles.infoArea}>
-                <Text
-                    style={[styles.artistName, { fontFamily: fontFamilyBold }]}
-                    numberOfLines={2}
-                >
+                <Typography variant="bodySmall" weight="bold" color="white" numberOfLines={2}>
                     {artist.name}
-                </Text>
+                </Typography>
             </View>
         </Pressable>
     );

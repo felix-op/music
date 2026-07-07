@@ -3,7 +3,8 @@ import { MusicDezzerModel } from "@models/musicDezzer";
 import { useAppFont, useAppTheme } from "@services";
 import { router } from "expo-router";
 import { useMemo, useState } from "react";
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
+import { Typography } from "@components";
 import { useGetMusics } from "../../hooks/useGetMusics";
 import { useGetSearchMusics } from "../../hooks/useGetSearchMusics";
 
@@ -79,9 +80,9 @@ export function MusicScreen({ albumId, showSearch = true }: TProps) {
                 onEndReached={handleEndReached}
                 onEndReachedThreshold={0.5}
                 ListEmptyComponent={
-                    <Text style={[styles.empty, { fontFamily: fontFamilyRegular, color: theme.text.secondary }]}>
+                    <Typography variant="body" color="secondary" style={styles.empty}>
                         Sin resultados para "{search}"
-                    </Text>
+                    </Typography>
                 }
                 ListFooterComponent={
                     active.isFetchingNextPage ? (
@@ -115,7 +116,6 @@ const styles = StyleSheet.create({
     empty: {
         textAlign: "center",
         marginTop: 40,
-        fontSize: 14,
     },
     footerLoading: {
         marginVertical: 16,

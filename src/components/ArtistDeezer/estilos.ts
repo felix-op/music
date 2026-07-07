@@ -35,8 +35,6 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 4,
     },
     artistName: {
-        fontSize: 13,
-        color: "#ffffff",
         textAlign: "center",
     },
     shimmerContainer: {

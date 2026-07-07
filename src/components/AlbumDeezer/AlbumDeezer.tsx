@@ -1,7 +1,8 @@
+import { Typography } from "@components";
 import { Ionicons } from "@expo/vector-icons";
 import { AlbumDezzerModel } from "@models/albumDezzer";
-import { useAppFont } from "@services";
-import { Image, Pressable, Text, View } from "react-native";
+import { useAppTheme } from "@services";
+import { Image, Pressable, View } from "react-native";
 import { styles } from "./estilos";
 
 export type AlbumDeezerProps = {
@@ -11,7 +12,7 @@ export type AlbumDeezerProps = {
 };
 
 export function AlbumDeezer({ album, width = 140, onPress }: AlbumDeezerProps) {
-    const { fontFamilyBold, fontFamilyRegular } = useAppFont();
+    const { theme } = useAppTheme();
     const coverUrl = album.cover_medium ?? album.cover_big ?? album.cover ?? null;
 
     return (
@@ -22,7 +23,7 @@ export function AlbumDeezer({ album, width = 140, onPress }: AlbumDeezerProps) {
             ]}
             onPress={onPress}
         >
-            <View style={styles.coverContainer}>
+            <View style={[styles.coverContainer, { borderRadius: theme.shape.borderRadius }]}>
                 {coverUrl ? (
                     <Image
                         source={{ uri: coverUrl }}
@@ -38,18 +39,12 @@ export function AlbumDeezer({ album, width = 140, onPress }: AlbumDeezerProps) {
             </View>
 
             <View style={styles.infoArea}>
-                <Text
-                    style={[styles.albumTitle, { fontFamily: fontFamilyBold }]}
-                    numberOfLines={1}
-                >
+                <Typography variant="body" weight="bold" color="white" numberOfLines={1}>
                     {album.title}
-                </Text>
-                <Text
-                    style={[styles.albumArtist, { fontFamily: fontFamilyRegular }]}
-                    numberOfLines={1}
-                >
+                </Typography>
+                <Typography variant="caption" color="secondary" numberOfLines={1}>
                     {album.artist?.name ?? ""}
-                </Text>
+                </Typography>
             </View>
         </Pressable>
     );

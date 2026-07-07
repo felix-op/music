@@ -38,12 +38,8 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 4,
     },
     albumTitle: {
-        fontSize: 14,
-        color: "#ffffff",
     },
     albumArtist: {
-        fontSize: 12,
-        color: "#a6a0c5", // Soft cosmic lavender
         marginTop: 2,
     },
     metaRow: {

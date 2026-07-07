@@ -13,7 +13,6 @@ export const styles = StyleSheet.create({
         paddingBottom: 40,
     },
     title: {
-        fontSize: 18,
         marginBottom: 16,
     },
     option: {
@@ -23,7 +22,5 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 6,
         gap: 16,
     },
-    optionText: {
-        fontSize: 16,
-    },
+    optionText: {},
 });

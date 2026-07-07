@@ -4,7 +4,8 @@ import { AlbumDezzerGenre, AlbumDezzerModel } from "@models/albumDezzer";
 import { ThemePalette } from "@models/theme";
 import { useAppFont, useAppTheme } from "@services";
 import { router } from "expo-router";
-import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, Pressable, StyleSheet, View } from "react-native";
+import { Typography } from "@components";
 import { useGetAlbumsByGenre } from "../../hooks/useGetAlbumsByGenre";
 import { useGetGenres } from "../../hooks/useGetGenres";
 
@@ -38,9 +39,9 @@ function SeeMoreCard({ width, onPress, theme, fontFamilyBold }: SeeMoreCardProps
                 <View style={seeMoreStyles.iconRing}>
                     <Ionicons name="chevron-forward" size={22} color={theme.primary.light} />
                 </View>
-                <Text style={[seeMoreStyles.label, { fontFamily: fontFamilyBold, color: theme.primary.light }]}>
+                <Typography variant="bodySmall" weight="bold" style={[seeMoreStyles.label, { color: theme.primary.light }]}>
                     Ver más
-                </Text>
+                </Typography>
                 <View style={seeMoreStyles.glossy} />
             </View>
             <View style={seeMoreStyles.infoSpacer} />
@@ -69,9 +70,7 @@ const seeMoreStyles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-    label: {
-        fontSize: 13,
-    },
+    label: {},
     glossy: {
         ...StyleSheet.absoluteFillObject,
         backgroundColor: "rgba(255,255,255,0.02)",
@@ -105,9 +104,9 @@ function GenreAlbumsRow({ genre, onVerMas, theme, fontFamilyBold, fontFamilyRegu
         <View style={styles.genreSection}>
             {/* Género header */}
             <View style={styles.genreHeader}>
-                <Text style={[styles.genreTitle, { fontFamily: fontFamilyBold }]}>
+                <Typography variant="subtitle" weight="bold" color="white">
                     {genre.name}
-                </Text>
+                </Typography>
                 <Pressable
                     onPress={() => onVerMas(genre)}
                     style={({ pressed }) => [
@@ -115,9 +114,9 @@ function GenreAlbumsRow({ genre, onVerMas, theme, fontFamilyBold, fontFamilyRegu
                         pressed && { opacity: 0.55 },
                     ]}
                 >
-                    <Text style={[styles.verMasLinkText, { fontFamily: fontFamilyRegular }]}>
+                    <Typography variant="bodySmall" color="secondary" style={styles.verMasLinkText}>
                         Ver más
-                    </Text>
+                    </Typography>
                     <Ionicons
                         name="chevron-forward"
                         size={13}
@@ -236,19 +235,13 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         paddingHorizontal: 2,
     },
-    genreTitle: {
-        fontSize: 18,
-        color: "#ffffff",
-    },
+    genreTitle: {},
     verMasLink: {
         flexDirection: "row",
         alignItems: "center",
         gap: 2,
     },
-    verMasLinkText: {
-        fontSize: 13,
-        color: "#a6a0c5",
-    },
+    verMasLinkText: {},
     horizontalListContainer: {
         paddingHorizontal: 2,
         paddingBottom: 8,
