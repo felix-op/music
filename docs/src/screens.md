@@ -8,13 +8,11 @@ Pantallas de la aplicación. Cada subcarpeta corresponde a una sección de la na
 
 Pantallas para navegar el contenido musical del servidor (actualmente con datos mock).
 
-**`AlbumsScreen.tsx`** — Pantalla principal de álbumes. Consume `GenresApi.getGenresWithAlbums()` y muestra los géneros como encabezados de sección, cada uno con una lista horizontal de tarjetas `Album` (ancho 140px). Durante la carga muestra 3 skeletons `GenrePlaceholder`.
+**`AlbumsScreen.tsx`** — Pantalla principal de álbumes. Consume `useGetGenres()` y muestra los géneros como encabezados de sección. Utiliza `GenreAlbumsRow` para presentar cada fila con un listado horizontal de álbumes de Deezer limitados a 10 elementos. Incluye botones "Ver más" para acceder al listado completo del género.
 
-**`ArtistsScreen.tsx`** — Pantalla de artistas. Usa datos hardcodeados (`MOCK_ARTISTS`). Muestra los artistas en una grilla de 3 columnas. Cada tarjeta tiene un avatar circular con el ícono `person`, el nombre del artista y la cantidad de álbumes. Incluye feedback de escala al presionar (0.96).
+**`ArtistsScreen.tsx`** — Pantalla de artistas. Utiliza el hook `useGetTopArtists()` para consumir el chart global de artistas de Deezer y renderiza una grilla infinita (`numColumns={3}`). Cada tarjeta tiene un avatar circular (usando la portada real de Deezer) y redirige al listado de álbumes de ese artista.
 
-**`MusicsScreen.tsx`** — Pantalla de canciones. Usa datos hardcodeados (`MOCK_TRACKS`). Lista vertical de canciones; cada fila muestra thumbnail, título, artista, duración y botón de reproducción.
-
-> **Estado actual:** `ArtistsScreen` y `MusicsScreen` aún no están conectadas a la API; usan datos mock directamente.
+**`MusicsScreen.tsx`** — Pantalla de canciones. Integra paginación infinita y barra de búsqueda sobre la API de Deezer. Muestra resultados de búsqueda en vivo o las canciones top agrupadas en una lista vertical con carátulas de Deezer integradas.
 
 ---
 

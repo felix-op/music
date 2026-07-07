@@ -27,6 +27,10 @@ Módulos de acceso a datos. Actualmente todos operan sobre datos mock con un del
 - `getGenresWithMusics()` — géneros con sus canciones agrupadas.
 - `getGenresWithArtists()` — géneros con sus artistas agrupados.
 
+**`MusicsDeezer.ts`** — Endpoints de Deezer para búsqueda (`/search`), top chart (`/chart/0/tracks`) y canciones por género (`/chart/{id}/tracks`).
+**`AlbumsDeezer.ts`** — Endpoints para detalles de álbumes (`/album/{id}`) y álbumes por género (`/chart/{id}/albums`).
+**`ArtistsDeezer.ts`** — Endpoints para top artistas (`/chart/0/artists`) y álbumes de un artista (`/artist/{id}/albums`).
+
 ---
 
 ## `contexts/` — Contextos de React

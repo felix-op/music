@@ -26,6 +26,12 @@ Interfaces TypeScript que definen la forma de los datos del dominio. Se usan en 
 { id, name }
 ```
 
+**`musicDezzer.ts`** — `MusicDezzerModel`: canción obtenida desde Deezer.
+
+**`albumDezzer.ts`** — `AlbumDezzerModel`: álbum obtenido desde Deezer, incluye portada e ID del género asociado.
+
+**`artistDezzer.ts`** — `ArtistDezzerModel`: artista de Deezer, incluye imágenes de varios tamaños (`picture_small`, `picture_medium`, etc).
+
 ---
 
 ## Tipos de UI

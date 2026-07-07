@@ -31,3 +31,26 @@ Hook genérico sobre `useQuery` de TanStack Query. Abstrae el `fetch` y el `resp
 - `...opciones` — Resto de opciones de `UseQueryOptions` (sin `queryKey` ni `queryFn`), permite sobreescribir o agregar configuración de la query.
 
 **Retorna:** el resultado de `useQuery` (`data`, `isLoading`, `error`, etc.), tipado por el genérico `TData`.
+
+---
+
+## `useGetInfinite.ts`
+
+Hook genérico sobre `useInfiniteQuery` de TanStack Query para listas paginadas de Deezer.
+
+**Parámetros:**
+- `key` — `string`. Se usa como parte de la `queryKey`.
+- `url` — `string` o función `(index) => string`. URL base.
+- `limit` — `number`. Cantidad de elementos por página.
+- `getPageLength` — `(lastPage: TData) => number`. Función para saber cuántos elementos devolvió la última página.
+
+**Retorna:** el resultado de `useInfiniteQuery` (incluye `fetchNextPage`, `hasNextPage`, `isFetchingNextPage`).
+
+---
+
+## Hooks Específicos de Deezer
+
+**`useGetAlbumById.ts`** — Trae los detalles completos de un álbum (incluye lista de canciones) usando `useGet`.
+**`useGetAlbumsByGenre.ts`** — Listado infinito de álbumes pertenecientes a un género específico.
+**`useGetTopArtists.ts`** — Listado infinito de los top artistas globales.
+**`useGetAlbumsByArtist.ts`** — Listado infinito de álbumes lanzados por un artista específico.

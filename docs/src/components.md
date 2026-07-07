@@ -10,6 +10,15 @@ Componentes de UI reutilizables. Cada componente tiene su propio subdirectorio c
 
 **`AlbumPlaceholder.tsx`** — Skeleton loader para álbumes. Anima la opacidad entre 0.4 y 0.8 en un ciclo de 2.4s para simular carga. Muestra barras de texto para título, artista y metadatos.
 
+## AlbumDeezer
+
+**`AlbumDeezer.tsx`** — Componente específico para renderizar álbumes usando los modelos de Deezer. Soporta portadas reales de la API (fallback automático al ícono de disco).
+
+## ArtistDeezer
+
+**`ArtistDeezer.tsx`** — Avatar circular para mostrar la imagen y nombre del artista de Deezer.
+**`ArtistPlaceholder.tsx`** — Skeleton loader circular animado para estado de carga de artistas.
+
 ## AnimatedTabBar
 
 **`AnimatedTabBar.tsx`** — Control segmentado / tab bar animado. Desliza una cápsula indicadora bajo la pestaña activa usando animación spring (tension 80, friction 10).
