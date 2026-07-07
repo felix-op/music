@@ -82,7 +82,8 @@ export function MusicListItem({ music, onPress, onSelect, hideAlbumCover = false
                 title: music.title,
                 artist: music.artist.name, 
                 duration: music.duration,
-                coverUrl: music.album?.cover_small 
+                coverUrl: music.album?.cover_small,
+                previewUrl: music.preview
             });
             //onSelect();
         }

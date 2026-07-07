@@ -5,12 +5,20 @@ import usePlayList from "../../hooks/usePlayList";
 import { Typography } from "../Typography/Typography";
 
 export function MiniPlayer() {
-    const { currentSong, isPlaying, play, pause, resume, next, prev, isPlayerLoading } = usePlayList();
+    const { currentSong, isPlaying, play, pause, resume, next, prev, isPlayerLoading, positionMillis, durationMillis } = usePlayList();
     const { theme } = useAppTheme();
 
     if (isPlayerLoading || !currentSong) {
         return null;
     }
+
+    const formatTime = (millis: number) => {
+        if (!millis || isNaN(millis)) return "00:00";
+        const totalSeconds = Math.floor(millis / 1000);
+        const m = Math.floor(totalSeconds / 60);
+        const s = totalSeconds % 60;
+        return `${m}:${s.toString().padStart(2, '0')}`;
+    };
 
     const handlePlayPause = () => {
         if (isPlaying) {
@@ -19,6 +27,8 @@ export function MiniPlayer() {
             resume();
         }
     };
+
+    const progressPercent = durationMillis > 0 ? (positionMillis / durationMillis) * 100 : 0;
 
     return (
         <View style={[styles.container, { backgroundColor: theme.background.paper, borderRadius: theme.shape.borderRadius }]}>
@@ -36,7 +46,7 @@ export function MiniPlayer() {
                     </Typography>
                     <View style={styles.timeRow}>
                         <Typography variant="caption" color="secondary">
-                            00:00
+                            {formatTime(positionMillis)} / {formatTime(durationMillis)}
                         </Typography>
                     </View>
                 </View>
@@ -52,6 +62,11 @@ export function MiniPlayer() {
                 <TouchableOpacity onPress={next} style={styles.controlBtn}>
                     <Ionicons name="play-skip-forward" size={24} color="#fff" />
                 </TouchableOpacity>
+            </View>
+            
+            {/* Progress Bar */}
+            <View style={styles.progressContainer}>
+                <View style={[styles.progressBar, { backgroundColor: theme.primary.main, width: `${progressPercent}%` }]} />
             </View>
         </View>
     );
@@ -106,5 +121,17 @@ const styles = StyleSheet.create({
     },
     controlBtn: {
         padding: 4,
+    },
+    progressContainer: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 2,
+        backgroundColor: '#48484A',
+        overflow: 'hidden',
+    },
+    progressBar: {
+        height: '100%',
     }
 });

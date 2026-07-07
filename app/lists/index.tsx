@@ -16,19 +16,36 @@ export default function PlaylistsPage() {
         p.name.toLowerCase().includes(search.toLowerCase())
     );
 
-    const renderPlaylistItem = ({ item }: { item: Playlist }) => (
-        <TouchableOpacity 
-            style={[styles.playlistCard, { borderRadius: theme.shape.borderRadius, backgroundColor: theme.background.paper}]}
-            onPress={() => router.push(`/lists/${item.id}`)}
-        >
-            <View style={styles.playlistInfo}>
-                <Typography variant="body" weight="bold">{item.name}</Typography>
-                <Typography variant="caption" color="secondary">
-                    {item.songs.length} canciones • Última vez: {new Date(item.updatedAt).toLocaleDateString()}
-                </Typography>
-            </View>
-        </TouchableOpacity>
-    );
+    const formatTime = (seconds: number) => {
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return `${m}:${s.toString().padStart(2, '0')}`;
+    };
+
+    const renderPlaylistItem = ({ item }: { item: Playlist }) => {
+        const lastSong = item.lastPlayedSongId 
+            ? item.songs.find(s => s.id === item.lastPlayedSongId) 
+            : null;
+
+        return (
+            <TouchableOpacity 
+                style={[styles.playlistCard, { borderRadius: theme.shape.borderRadius, backgroundColor: theme.background.paper}]}
+                onPress={() => router.push(`/lists/${item.id}`)}
+            >
+                <View style={styles.playlistInfo}>
+                    <Typography variant="body" weight="bold">{item.name}</Typography>
+                    <Typography variant="caption" color="secondary">
+                        {item.songs.length} canciones • Última vez: {new Date(item.updatedAt).toLocaleDateString()}
+                    </Typography>
+                    {lastSong && item.lastPlayedTime !== undefined && (
+                        <Typography variant="caption" color="secondary">
+                            Último escuchado: {lastSong.title || `Canción ${lastSong.id}`} a las {formatTime(item.lastPlayedTime)}
+                        </Typography>
+                    )}
+                </View>
+            </TouchableOpacity>
+        );
+    };
 
     return (
         <View style={styles.container}>
@@ -44,7 +61,7 @@ export default function PlaylistsPage() {
                 {!search && currentQueue && (
                     <View style={styles.section}>
                         <Typography variant="subtitle" weight="bold" style={styles.sectionTitle}>
-                            Cola Actual
+                            Sin guardar
                         </Typography>
                         {renderPlaylistItem({ item: currentQueue })}
                     </View>

@@ -29,3 +29,5 @@ export { BotonGuardarLista } from "./Buttons/BotonGuardarLista";
 export { BotonContinuar } from "./Buttons/BotonContinuar";
 export { BotonIconoRecargar } from "./Buttons/BotonIconoRecargar";
 export { BotonIconoContinuar } from "./Buttons/BotonIconoContinuar";
+export { BotonEliminar } from "./Buttons/BotonEliminar";
+export { BotonRenombrar } from "./Buttons/BotonRenombrar";

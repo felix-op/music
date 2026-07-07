@@ -18,7 +18,7 @@ export const usePlaylistMutations = () => {
             if (!queue) {
                 queue = {
                     id: Date.now().toString(),
-                    name: 'Cola Actual',
+                    name: song.title || 'Sin nombre',
                     createdAt: Date.now(),
                     updatedAt: Date.now(),
                     isPermanent: false,
@@ -38,7 +38,7 @@ export const usePlaylistMutations = () => {
         mutationFn: async (song: PlaylistSong) => {
             const queue: Playlist = {
                 id: Date.now().toString(),
-                name: 'Cola Actual',
+                name: song.title || 'Sin nombre',
                 createdAt: Date.now(),
                 updatedAt: Date.now(),
                 isPermanent: false,
@@ -46,6 +46,15 @@ export const usePlaylistMutations = () => {
             };
             await playlistStorage.setCurrentQueue(queue);
             return queue;
+        },
+        onSuccess: () => invalidatePlaylists(),
+    });
+
+    // Reemplaza la cola actual con una lista de reproducción entera
+    const replaceCurrentQueue = useMutation({
+        mutationFn: async (playlist: Playlist) => {
+            await playlistStorage.setCurrentQueue(playlist);
+            return playlist;
         },
         onSuccess: () => invalidatePlaylists(),
     });
@@ -91,10 +100,20 @@ export const usePlaylistMutations = () => {
         onSuccess: () => invalidatePlaylists(),
     });
 
+    // Elimina permanentemente una lista
+    const deletePlaylist = useMutation({
+        mutationFn: async (id: string) => {
+            await playlistStorage.deletePlaylist(id);
+        },
+        onSuccess: () => invalidatePlaylists(),
+    });
+
     return {
         addToCurrentQueue,
         playNewSong,
+        replaceCurrentQueue,
         savePlaylist,
+        deletePlaylist,
         updateProgress,
     };
 };

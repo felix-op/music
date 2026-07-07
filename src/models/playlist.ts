@@ -7,6 +7,7 @@ export interface PlaylistSong {
     artist?: string;
     duration?: number;
     coverUrl?: string;
+    previewUrl?: string;
 }
 
 export interface Playlist {

@@ -1,9 +1,10 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { View, FlatList, TouchableOpacity, StyleSheet, Alert } from "react-native";
-import { Header, Typography, FormModal, InputText, BotonGuardarLista, BotonContinuar, BotonIconoRecargar } from "@components/index";
+import { Header, Typography, FormModal, InputText, BotonGuardarLista, BotonContinuar, BotonIconoRecargar, BotonEliminar, BotonRenombrar } from "@components/index";
 import { usePlaylistsLocal } from "../../src/hooks/usePlaylistsLocal";
 import { usePlaylistMutations } from "../../src/hooks/usePlaylistMutations";
+import usePlayList from "../../src/hooks/usePlayList";
 import { Playlist, PlaylistSong } from "../../src/models";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -11,7 +12,8 @@ export default function PlaylistDetailPage() {
     const { id } = useLocalSearchParams<{ id: string }>();
     const router = useRouter();
     const { savedPlaylists, currentQueue } = usePlaylistsLocal();
-    const { updateProgress, savePlaylist } = usePlaylistMutations();
+    const { updateProgress, savePlaylist, deletePlaylist, replaceCurrentQueue } = usePlaylistMutations();
+    const { playFromQueue } = usePlayList();
     
     const [isSaveModalVisible, setIsSaveModalVisible] = useState(false);
     const [playlistName, setPlaylistName] = useState("");
@@ -38,31 +40,20 @@ export default function PlaylistDetailPage() {
         return `${m}:${s.toString().padStart(2, '0')}`;
     };
 
-    const handlePlaySong = (song: PlaylistSong, index: number) => {
-        // Simular lógica de reproducción: calcular el tiempo acumulado
-        const accumulatedTime = playlist!.songs.slice(0, index).reduce((acc, s) => acc + (s.duration || 210), 0);
-        
-        updateProgress.mutate({
-            playlistId: playlist!.id,
-            songId: song.id,
-            time: accumulatedTime
-        });
-
-        Alert.alert("Reproduciendo", `Iniciando desde el minuto ${formatTime(accumulatedTime)}`);
+    const handlePlaySong = async (song: PlaylistSong, index: number) => {
+        await replaceCurrentQueue.mutateAsync(playlist!);
+        playFromQueue(song.id);
     };
 
-    const handleContinue = () => {
-        Alert.alert("Continuar", `Continuando desde la canción ${playlist?.lastPlayedSongId || 'Inicio'} en el minuto ${formatTime(playlist?.lastPlayedTime || 0)}`);
+    const handleContinue = async () => {
+        await replaceCurrentQueue.mutateAsync(playlist!);
+        playFromQueue(playlist?.lastPlayedSongId);
     };
 
-    const handleReset = () => {
+    const handleReset = async () => {
         if (playlist?.songs.length) {
-            updateProgress.mutate({
-                playlistId: playlist.id,
-                songId: playlist.songs[0].id,
-                time: 0
-            });
-            Alert.alert("Reset", "Reproducción reiniciada a 0:00");
+            await replaceCurrentQueue.mutateAsync(playlist!);
+            playFromQueue(playlist.songs[0].id);
         }
     };
 
@@ -76,7 +67,28 @@ export default function PlaylistDetailPage() {
         savePlaylist.mutate({ ...playlist!, name: nameToSave });
         Alert.alert("Guardada", `La lista "${nameToSave}" se ha guardado permanentemente.`);
         setIsSaveModalVisible(false);
-        router.back();
+        // Si no era permanente, volver. Si ya era permanente (renombrar), quedarse.
+        if (!playlist!.isPermanent) {
+            router.back();
+        }
+    };
+
+    const handleDelete = () => {
+        Alert.alert(
+            "Eliminar Lista",
+            `¿Estás seguro que deseas eliminar "${playlist!.name}"?`,
+            [
+                { text: "Cancelar", style: "cancel" },
+                { 
+                    text: "Eliminar", 
+                    style: "destructive",
+                    onPress: () => {
+                        deletePlaylist.mutate(playlist!.id);
+                        router.back();
+                    }
+                }
+            ]
+        );
     };
 
     const renderSong = ({ item, index }: { item: PlaylistSong, index: number }) => (
@@ -100,12 +112,21 @@ export default function PlaylistDetailPage() {
                 <Typography variant="body" color="secondary">
                     {playlist.songs.length} canciones • {formatTime(totalDurationInSeconds)} en total
                 </Typography>
-                {!playlist.isPermanent && (
+                {!playlist.isPermanent ? (
                     <BotonGuardarLista onPress={() => {
-                        setPlaylistName(playlist!.name === "Cola Actual" ? "" : playlist!.name);
+                        setPlaylistName(playlist!.name === "Cola Actual" || playlist!.name === "Sin nombre" ? "" : playlist!.name);
                         setNameError("");
                         setIsSaveModalVisible(true);
                     }} />
+                ) : (
+                    <View style={{ flexDirection: 'row', gap: 12 }}>
+                        <BotonRenombrar onPress={() => {
+                            setPlaylistName(playlist!.name);
+                            setNameError("");
+                            setIsSaveModalVisible(true);
+                        }} />
+                        <BotonEliminar onPress={handleDelete} />
+                    </View>
                 )}
 
                 <View style={styles.actionButtons}>
