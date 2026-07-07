@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { MusicDezzerModel } from "@models/musicDezzer";
 import { useAppFont, useAppTheme } from "@services";
 import { useRef, useState } from "react";
+import { Image } from "react-native";
 import {
     Animated,
     PanResponder,
@@ -17,6 +18,7 @@ type TProps = {
     selected: boolean;
     onPress: () => void;
     onSelect: () => void;
+    hideAlbumCover?: boolean;
 };
 
 const formatDuration = (seconds: number) => {
@@ -25,7 +27,7 @@ const formatDuration = (seconds: number) => {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
 };
 
-export function MusicListItem({ music, selected, onPress, onSelect }: TProps) {
+export function MusicListItem({ music, selected, onPress, onSelect, hideAlbumCover = false }: TProps) {
     const { theme } = useAppTheme();
     const { fontFamilyBold, fontFamilyRegular } = useAppFont();
     const { width: screenWidth } = useWindowDimensions();
@@ -97,28 +99,37 @@ style={[
                         },
                     ]}
                 >
-                    <View style={styles.iconWrapper}>
-                        <View
-                            style={[
-                                styles.iconCircle,
-                                { backgroundColor: iconColor },
-                            ]}
-                        >
-                            <Ionicons
-                                name="musical-note"
-                                size={22}
-                                color="#ffffff"
-                            />
-                            <View style={styles.glossy} />
+                    {!hideAlbumCover && (
+                        <View style={styles.iconWrapper}>
+                            <View
+                                style={[
+                                    styles.iconCircle,
+                                    { backgroundColor: iconColor },
+                                ]}
+                            >
+                                {music.album?.cover_small ? (
+                                    <Image
+                                        source={{ uri: music.album.cover_small }}
+                                        style={styles.coverImage}
+                                    />
+                                ) : (
+                                    <Ionicons
+                                        name="musical-note"
+                                        size={22}
+                                        color="#ffffff"
+                                    />
+                                )}
+                                <View style={styles.glossy} />
+                            </View>
+                            <View style={styles.playOverlay}>
+                                <Ionicons
+                                    name="play"
+                                    size={13}
+                                    color={theme.text.primary}
+                                />
+                            </View>
                         </View>
-                        <View style={styles.playOverlay}>
-                            <Ionicons
-                                name="play"
-                                size={13}
-                                color={theme.text.primary}
-                            />
-                        </View>
-                    </View>
+                    )}
 
                     <View style={styles.infoCol}>
                         <Text

@@ -1,10 +1,14 @@
-import { Album, AlbumPlaceholder, GenrePlaceholder } from "@components";
+import { AlbumDeezer, AlbumPlaceholder, GenrePlaceholder } from "@components";
 import { Ionicons } from "@expo/vector-icons";
+import { AlbumDezzerGenre, AlbumDezzerModel } from "@models/albumDezzer";
 import { ThemePalette } from "@models/theme";
-import { GenresApi, GenreWithAlbums, useAppFont, useAppTheme } from "@services";
+import { useAppFont, useAppTheme } from "@services";
 import { router } from "expo-router";
-import { useEffect, useState } from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { useGetAlbumsByGenre } from "../../hooks/useGetAlbumsByGenre";
+import { useGetGenres } from "../../hooks/useGetGenres";
+
+// ─── SeeMoreCard ────────────────────────────────────────────────────────────
 
 type SeeMoreCardProps = {
     width: number;
@@ -77,32 +81,115 @@ const seeMoreStyles = StyleSheet.create({
     },
 });
 
+// ─── GenreAlbumsRow ──────────────────────────────────────────────────────────
+
+type GenreAlbumsRowProps = {
+    genre: AlbumDezzerGenre;
+    onVerMas: (genre: AlbumDezzerGenre) => void;
+    theme: ThemePalette;
+    fontFamilyBold: string;
+    fontFamilyRegular: string;
+};
+
+function GenreAlbumsRow({ genre, onVerMas, theme, fontFamilyBold, fontFamilyRegular }: GenreAlbumsRowProps) {
+    const { data: albums, isLoading } = useGetAlbumsByGenre(genre.id);
+
+    const handleAlbumPress = (album: AlbumDezzerModel) => {
+        router.push({
+            pathname: "/explore/albums/[id]",
+            params: { id: album.id, nombre: album.title },
+        });
+    };
+
+    return (
+        <View style={styles.genreSection}>
+            {/* Género header */}
+            <View style={styles.genreHeader}>
+                <Text style={[styles.genreTitle, { fontFamily: fontFamilyBold }]}>
+                    {genre.name}
+                </Text>
+                <Pressable
+                    onPress={() => onVerMas(genre)}
+                    style={({ pressed }) => [
+                        styles.verMasLink,
+                        pressed && { opacity: 0.55 },
+                    ]}
+                >
+                    <Text style={[styles.verMasLinkText, { fontFamily: fontFamilyRegular }]}>
+                        Ver más
+                    </Text>
+                    <Ionicons
+                        name="chevron-forward"
+                        size={13}
+                        color={theme.text.secondary}
+                    />
+                </Pressable>
+            </View>
+
+            {/* Lista horizontal */}
+            {isLoading ? (
+                <FlatList
+                    horizontal
+                    data={[1, 2, 3, 4, 5]}
+                    keyExtractor={(item) => item.toString()}
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.horizontalListContainer}
+                    ItemSeparatorComponent={() => <View style={styles.separator} />}
+                    renderItem={() => <AlbumPlaceholder width={140} />}
+                />
+            ) : (
+                <FlatList
+                    horizontal
+                    data={albums}
+                    keyExtractor={(album) => album.id.toString()}
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.horizontalListContainer}
+                    ItemSeparatorComponent={() => <View style={styles.separator} />}
+                    ListEmptyComponent={
+                        <View style={styles.emptyRow}>
+                            <ActivityIndicator size="small" color={theme.primary.main} />
+                        </View>
+                    }
+                    ListFooterComponent={() => (
+                        <View style={styles.seeMoreWrapper}>
+                            <SeeMoreCard
+                                width={140}
+                                onPress={() => onVerMas(genre)}
+                                theme={theme}
+                                fontFamilyBold={fontFamilyBold}
+                            />
+                        </View>
+                    )}
+                    renderItem={({ item: album }) => (
+                        <AlbumDeezer
+                            album={album}
+                            width={140}
+                            onPress={() => handleAlbumPress(album)}
+                        />
+                    )}
+                />
+            )}
+        </View>
+    );
+}
+
+// ─── AlbumsScreen ─────────────────────────────────────────────────────────────
+
 export default function AlbumsScreen() {
     const { fontFamilyBold, fontFamilyRegular } = useAppFont();
     const { theme } = useAppTheme();
-    const [genres, setGenres] = useState<GenreWithAlbums[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
 
-    useEffect(() => {
-        GenresApi.getGenresWithAlbums()
-            .then((data) => {
-                setGenres(data);
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.error("Error loading albums via API:", err);
-                setLoading(false);
-            });
-    }, []);
+    const { data: genresResponse, isLoading } = useGetGenres();
+    const genres = genresResponse?.data ?? [];
 
-    const handleVerMas = (genre: GenreWithAlbums) => {
+    const handleVerMas = (genre: AlbumDezzerGenre) => {
         router.push({
             pathname: "/explore/albums/genre/[genre]",
             params: { genre: genre.id, genreName: genre.name },
         });
     };
 
-    if (loading) {
+    if (isLoading) {
         return (
             <FlatList
                 data={[1, 2, 3]}
@@ -123,51 +210,13 @@ export default function AlbumsScreen() {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.listContainer}
             renderItem={({ item: genre }) => (
-                <View style={styles.genreSection}>
-                    <View style={styles.genreHeader}>
-                        <Text style={[styles.genreTitle, { fontFamily: fontFamilyBold }]}>
-                            {genre.name}
-                        </Text>
-                        <Pressable
-                            onPress={() => handleVerMas(genre)}
-                            style={({ pressed }) => [
-                                styles.verMasLink,
-                                pressed && { opacity: 0.55 },
-                            ]}
-                        >
-                            <Text style={[styles.verMasLinkText, { fontFamily: fontFamilyRegular }]}>
-                                Ver más
-                            </Text>
-                            <Ionicons
-                                name="chevron-forward"
-                                size={13}
-                                color={theme.text.secondary}
-                            />
-                        </Pressable>
-                    </View>
-
-                    <FlatList
-                        horizontal
-                        data={genre.albums}
-                        keyExtractor={(album) => album.id.toString()}
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={styles.horizontalListContainer}
-                        ItemSeparatorComponent={() => <View style={styles.separator} />}
-                        ListFooterComponent={() => (
-                            <View style={styles.seeMoreWrapper}>
-                                <SeeMoreCard
-                                    width={140}
-                                    onPress={() => handleVerMas(genre)}
-                                    theme={theme}
-                                    fontFamilyBold={fontFamilyBold}
-                                />
-                            </View>
-                        )}
-                        renderItem={({ item: album }) => (
-                            <Album album={album} width={140} />
-                        )}
-                    />
-                </View>
+                <GenreAlbumsRow
+                    genre={genre}
+                    onVerMas={handleVerMas}
+                    theme={theme}
+                    fontFamilyBold={fontFamilyBold}
+                    fontFamilyRegular={fontFamilyRegular}
+                />
             )}
         />
     );
@@ -209,5 +258,11 @@ const styles = StyleSheet.create({
     },
     seeMoreWrapper: {
         marginLeft: 14,
+    },
+    emptyRow: {
+        width: 140,
+        aspectRatio: 1,
+        alignItems: "center",
+        justifyContent: "center",
     },
 });

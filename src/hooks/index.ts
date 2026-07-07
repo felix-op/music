@@ -2,3 +2,6 @@ export { useGet } from "./useGet";
 export { useGetMusics } from "./useGetMusics";
 export { useGetMusicById } from "./useGetMusicById";
 export { useGetSearchMusics } from "./useGetSearchMusics";
+export { useGetGenres } from "./useGetGenres";
+export { useGetAlbumsByGenre } from "./useGetAlbumsByGenre";
+export { useGetAlbumById } from "./useGetAlbumById";

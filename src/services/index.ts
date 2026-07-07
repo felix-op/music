@@ -11,6 +11,8 @@ export { ArtistsApi } from "./apis/Artists";
 export { GenresApi } from "./apis/Genres";
 export { MusicFilters, MusicsApi } from "./apis/Musics";
 export { DEEZER_BASE_URL, DeezerChartResponse, DeezerListResponse, MusicsDeezerApi } from "./apis/MusicsDeezer";
+export { AlbumsDeezerApi } from "./apis/AlbumsDeezer";
+
 
 export { GenreWithAlbums, GenreWithArtists, GenreWithMusics } from "./apis/mockData";
 

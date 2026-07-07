@@ -1,10 +1,11 @@
-import { Ionicons } from "@expo/vector-icons";
-import { Album } from "@models/album";
-import { AlbumsApi, useAppFont, useAppTheme } from "@services";
+import { MusicListItem, MusicPlaceholder } from "@components";
+import { useGetAlbumById } from "../../../src/hooks/useGetAlbumById";
+import { MusicDezzerModel } from "@models/musicDezzer";
+import { useAppFont, useAppTheme } from "@services";
 import { router, Stack, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { MusicScreen } from "../../../src/screens/explore/MusicScreen";
+import { useState } from "react";
+import { FlatList, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 type Params = {
     id: string;
@@ -15,18 +16,20 @@ export default function AlbumDetailPage() {
     const { id, nombre } = useLocalSearchParams<Params>();
     const { theme } = useAppTheme();
     const { fontFamilyBold, fontFamilyRegular } = useAppFont();
-    const [album, setAlbum] = useState<Album | null>(null);
+    const [selectedId, setSelectedId] = useState<number | null>(null);
 
-    useEffect(() => {
-        AlbumsApi.getById(Number(id)).then((data) => {
-            if (data) setAlbum(data);
+    const { data: album, isLoading } = useGetAlbumById(Number(id));
+
+    const artistNames = album?.artist?.name ?? "";
+    const coverUrl = album?.cover_medium ?? album?.cover_big ?? album?.cover ?? null;
+    const musics = album?.tracks?.data ?? [];
+
+    const handleMusicPress = (music: MusicDezzerModel) => {
+        router.push({
+            pathname: "/explore/music/[id]",
+            params: { id: music.id, musicName: music.title },
         });
-    }, [id]);
-
-    const artistNames = album
-        ? [...new Set(album.musics.map((m) => m.artist.name))].join(", ") ||
-          album.artist.name
-        : "";
+    };
 
     return (
         <View style={[styles.container, { backgroundColor: theme.background.default }]}>
@@ -58,18 +61,17 @@ export default function AlbumDetailPage() {
             <View style={styles.header}>
                 {album ? (
                     <>
-                        <View
-                            style={[
-                                styles.cover,
-                                { backgroundColor: album.coverColor ?? theme.primary.main },
-                            ]}
-                        >
-                            <Ionicons
-                                name="disc"
-                                size={88}
-                                color="#ffffff"
-                                style={styles.discIcon}
-                            />
+                        <View style={[styles.cover, { backgroundColor: theme.primary.main }]}>
+                            {coverUrl ? (
+                                <Image source={{ uri: coverUrl }} style={styles.coverImage} />
+                            ) : (
+                                <Ionicons
+                                    name="disc"
+                                    size={88}
+                                    color="#ffffff"
+                                    style={styles.discIcon}
+                                />
+                            )}
                             <View style={styles.glossy} />
                         </View>
                         <Text
@@ -79,7 +81,7 @@ export default function AlbumDetailPage() {
                             ]}
                             numberOfLines={2}
                         >
-                            {album.name}
+                            {album.title}
                         </Text>
                         <Text
                             style={[
@@ -100,7 +102,33 @@ export default function AlbumDetailPage() {
 
             {/* Music list */}
             <View style={styles.list}>
-                <MusicScreen albumId={Number(id)} showSearch={false} />
+                {isLoading ? (
+                    <FlatList
+                        data={[1, 2, 3, 4, 5]}
+                        keyExtractor={(item) => item.toString()}
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={styles.listContent}
+                        renderItem={() => <MusicPlaceholder />}
+                    />
+                ) : (
+                    <FlatList
+                        data={musics}
+                        keyExtractor={(item) => item.id.toString()}
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={styles.listContent}
+                        renderItem={({ item }) => (
+                            <MusicListItem
+                                music={item}
+                                selected={selectedId === item.id}
+                                onPress={() => handleMusicPress(item)}
+                                onSelect={() =>
+                                    setSelectedId((prev) => (prev === item.id ? null : item.id))
+                                }
+                                hideAlbumCover={true}
+                            />
+                        )}
+                    />
+                )}
             </View>
         </View>
     );
@@ -127,6 +155,11 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         overflow: "hidden",
     },
+    coverImage: {
+        width: "100%",
+        height: "100%",
+        resizeMode: "cover",
+    },
     discIcon: {
         opacity: 0.85,
     },
@@ -150,5 +183,8 @@ const styles = StyleSheet.create({
     },
     list: {
         flex: 1,
+    },
+    listContent: {
+        paddingBottom: 140,
     },
 });

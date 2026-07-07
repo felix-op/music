@@ -4,6 +4,7 @@ export { NavbarContainer } from "./Navbar/NavbarContainer";
 export { Typography } from "./Typography/Typography";
 
 export { Album } from "./Album/Album";
+export { AlbumDeezer } from "./AlbumDeezer/AlbumDeezer";
 export { AlbumPlaceholder } from "./AlbumPlaceholder/AlbumPlaceholder";
 export { AnimatedTabBar } from "./AnimatedTabBar/AnimatedTabBar";
 export { ChipButton } from "./ChipButton/ChipButton";

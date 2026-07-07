@@ -16,3 +16,11 @@ export {
     MusicDezzerArtist,
     MusicDezzerModel
 } from "./musicDezzer";
+
+export {
+    AlbumDezzerArtist,
+    AlbumDezzerGenre,
+    AlbumDezzerModel,
+    DeezerAlbumListResponse,
+    DeezerGenreListResponse,
+} from "./albumDezzer";
