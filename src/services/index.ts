@@ -19,3 +19,5 @@ export { GenreWithAlbums, GenreWithArtists, GenreWithMusics } from "./apis/mockD
 
 export { appThemes, ThemeContext, ThemeContextType, ThemeKey, useAppTheme } from "./contexts/ThemeContext";
 export { ThemeProvider } from "./providers/ThemeProvider";
+
+export { PlayerContext, PlayerProvider } from "./contexts/PlayerContext";
