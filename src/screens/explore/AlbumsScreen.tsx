@@ -140,7 +140,7 @@ function GenreAlbumsRow({ genre, onVerMas, theme, fontFamilyBold, fontFamilyRegu
             ) : (
                 <FlatList
                     horizontal
-                    data={albums}
+                    data={albums.slice(0, 10)}
                     keyExtractor={(album) => album.id.toString()}
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={styles.horizontalListContainer}

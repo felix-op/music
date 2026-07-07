@@ -1,10 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Album as AlbumCard, AlbumPlaceholder } from "@components";
-import { Album } from "@models/album";
-import { AlbumsApi, useAppFont, useAppTheme } from "@services";
+import { AlbumPlaceholder, AlbumDeezer } from "@components";
+import { useAppFont, useAppTheme } from "@services";
+import { useGetAlbumsByGenre } from "../../../../src/hooks/useGetAlbumsByGenre";
 import { router, Stack, useLocalSearchParams } from "expo-router";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import {
+    ActivityIndicator,
     Animated,
     FlatList,
     Pressable,
@@ -52,21 +53,23 @@ export default function GenreAlbumsPage() {
     const { fontFamilyRegular } = useAppFont();
     const { theme } = useAppTheme();
     const { width: screenWidth } = useWindowDimensions();
-    const [albums, setAlbums] = useState<Album[]>([]);
-    const [loading, setLoading] = useState(true);
+    const {
+        data: albums,
+        isLoading,
+        hasNextPage,
+        fetchNextPage,
+        isFetchingNextPage,
+    } = useGetAlbumsByGenre(Number(genreId));
 
     // 16px padding each side + 16px gap between columns
     const albumWidth = Math.floor((screenWidth - 48) / 2);
     const pageTitle = genreName ? `Álbumes de ${genreName}` : "Álbumes";
 
-    useEffect(() => {
-        AlbumsApi.getByGenreId(Number(genreId))
-            .then((data) => {
-                setAlbums(data);
-                setLoading(false);
-            })
-            .catch(() => setLoading(false));
-    }, [genreId]);
+    const handleEndReached = () => {
+        if (hasNextPage && !isFetchingNextPage) {
+            fetchNextPage();
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -94,7 +97,7 @@ export default function GenreAlbumsPage() {
                 }}
             />
 
-            {loading ? (
+            {isLoading ? (
                 <FlatList
                     data={[1, 2, 3, 4]}
                     keyExtractor={(i) => i.toString()}
@@ -128,9 +131,25 @@ export default function GenreAlbumsPage() {
                     columnWrapperStyle={styles.columnWrapper}
                     contentContainerStyle={styles.listContent}
                     showsVerticalScrollIndicator={false}
+                    onEndReached={handleEndReached}
+                    onEndReachedThreshold={0.5}
+                    ListFooterComponent={
+                        isFetchingNextPage ? (
+                            <ActivityIndicator color={theme.primary.main} style={{ marginVertical: 16 }} />
+                        ) : null
+                    }
                     renderItem={({ item, index }) => (
                         <FadeInItem delay={Math.min(index, 9) * 75}>
-                            <AlbumCard album={item} width={albumWidth} />
+                            <AlbumDeezer 
+                                album={item} 
+                                width={albumWidth} 
+                                onPress={() => 
+                                    router.push({
+                                        pathname: "/explore/albums/[id]",
+                                        params: { id: item.id, nombre: item.title }
+                                    })
+                                }
+                            />
                         </FadeInItem>
                     )}
                 />
